@@ -16,17 +16,17 @@
             <h3 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Log in</h3>
 
             <div class="form-outline mb-4">
-              <input type="email" id="form2Example18" class="form-control form-control-lg" />
+              <input type="email" v-model="email" id="form2Example18" class="form-control form-control-lg" required>
               <label class="form-label" for="form2Example18">Email address</label>
             </div>
 
             <div class="form-outline mb-4">
-              <input type="password" id="form2Example28" class="form-control form-control-lg" />
+              <input type="password" v-model="password" id="form2Example28" class="form-control form-control-lg" required>
               <label class="form-label" for="form2Example28">Password</label>
             </div>
 
             <div class="pt-1 mb-4">
-              <button class="btn btn-info btn-lg btn-block" type="button">Login</button>
+              <button class="btn btn-info btn-lg btn-block" type="button" @click="login()">Login</button>
             </div>
 
             <p class="small mb-5 pb-lg-2"><a class="text-muted" href="#!">Forgot password?</a></p>
@@ -45,3 +45,22 @@
   </div>
 </section>
 </template>
+
+<script>
+import store from '@/store';
+
+export default {
+  data() {
+    return {
+      email: '',
+      password: '',
+    }
+  },
+  methods: {
+    login() {
+      this.$store.dispatch('logout')
+    }
+  },
+
+}
+</script>

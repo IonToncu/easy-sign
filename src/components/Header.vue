@@ -4,12 +4,12 @@
         <img src="../assets/logo.png" alt="EasySign logo" />
         </div>
         <nav class="header__nav">
-        <ul>
-            <li><a href="#">Home</a></li>
-            <li><a href="#">About</a></li>
-            <li><a href="#">Features</a></li>
-            <li><a href="#">Contact</a></li>
-        </ul>
+          <ul>
+              <li><a href="#">Home</a></li>
+              <li><a href="#">About</a></li>
+              <li><a href="#">Features</a></li>
+              <li><a href="#">Contact</a></li>
+          </ul>
         </nav>
     </header>
 </template>
@@ -22,6 +22,7 @@
         default: "EasySign",
       },
     },
+    
   };
   </script>
   
@@ -33,10 +34,11 @@
   background-color: #121212;
   padding: 1rem;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  height: 80px;
 }
 
 .header__logo img {
-  height: 80px;
+  height: 70px;
 }
 
 .header__nav ul {

@@ -2,18 +2,22 @@
   <div class="static-block"></div>
   <div class="static-block-left"></div>
 
+  <div class="search">
+    <input class="serch-input" v-model="query" type="text" placeholder="Search...">
+  </div>
+
   <div class="scrollable-block">
   <div class="content">
     <div class="folder-list-box">
-        <div v-for="(boxe, index) in boxes" :key="index" class="boxe">
-          <img class="card-img-top" src="@/assets/House_blueprint.jpg" alt="Card image cap">
-          <div class="card-body">
-            <h4 class="card-title">Title</h4>
-            <p class="card-text">Signed: Shaina Thiel</p>
-            <time datetime="3/30/2023" style="margin-right:65%">3/30/2023</time>
-            <img src="@/assets/icon/denied.png" class="card-img" alt="STATUS">
+          <div v-for="(boxe, index) in boxes" :key="index" class="boxe">
+            <img class="card-img-top" src="@/assets/House_blueprint.jpg" alt="Card image cap">
+            <div class="card-body">
+              <h4 class="card-title">Title</h4>
+              <p class="card-text">Signed: Shaina Thiel</p>
+              <time datetime="3/30/2023" style="margin-right:65%">3/30/2023</time>
+              <img src="@/assets/icon/denied.png" class="card-img" alt="STATUS">
+          </div>
         </div>
-      </div>
     </div>
   </div>
 </div>
@@ -31,13 +35,32 @@ export default {
   },
   data() {
     return {
-      boxes: [1, 2, 3, 4, 5, 6, 1, 2, 3, 2, 3, 4, 5, 6, 1, 2] // You can replace this with your own data
+      boxes: [1, 2, 3, 4, 5, 6, 1, 2, 3, 2, 3, 4, 5, 6, 1, 2], // You can replace this with your own data,
+      query: ''
     }
-  }
-}
+  },
+    watch: {
+      query(newVal) {
+        this.$emit('search', newVal)
+      }
+    }
+  };
 </script>
 
 <style scoped>
+.search{
+  max-width: 80%;
+}
+.serch-input{
+  max-width: 80%;
+  width: 80%;
+  margin-top: 5px;
+  height: 50px;
+  transform: translate(16%, 0%);
+  border-radius: 15px;
+  border-color: #ffffff;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+}
 .home {
   max-width: 800px;
   margin: 0 auto;
@@ -46,28 +69,35 @@ export default {
 }
 .static-block {
   position: fixed;
-  top: 0;
   right: 0;
   width: 20%;
-  height: 100%;
-  background-color: #120101;
+  top: 15%;
+  height: 85%;
+  background-color: #830000;
 }
 
 .static-block-left{
   position: fixed;
-  top: 0;
   left: 0;
   width: 15%;
-  height: 100%;
-  background-color: #f7f9fc;
+  top: 10%;
+  height: 85%;
+  background-color: #ffffff;
+  border-radius: 15px;
+  margin: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
 }
 .static-block {
   position: fixed;
   top: 0;
   right: 0;
   width: 15%;
-  height: 100%;
-  background-color: #000000;
+  top: 10%;
+  height: 85%;
+  background-color: #ffffff;
+  border-radius: 15px;
+  margin: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
 }
 .scrollable-block {
   position: absolute;
@@ -77,9 +107,10 @@ export default {
   width: 65%;
   max-height: 95%;
   overflow: auto;
-  /* border: 1px solid #ccc; */
+  margin-top: 2%;
   border-radius: 20px;
   background-color: #ffffff;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
 }
 
 .content {

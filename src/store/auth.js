@@ -28,21 +28,23 @@ const authModule = {
     },
   },
   actions: {
-    async login({ commit }, { email, password }) {
-      console.log("test")
+    async login({ commit }, { email, password }){
       commit('auth_request');
       try {
         const response = await axios.post('/api/auth/login', { email, password });
         const token = response.data.token;
         const user = jwtDecode(token);
         localStorage.setItem('token', token);
-        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        axios.defaults.headers.common['Authorization'] = token;
         commit('auth_success', { token, user });
       } catch (error) {
-        commit('auth_error', error.message);
+        commit('auth_error', error);
         localStorage.removeItem('token');
       }
     },
+
+
+
     logout({ commit }) {
       commit('logout');
       localStorage.removeItem('token');
