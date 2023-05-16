@@ -5,7 +5,7 @@
         </div>
         <nav class="header__nav">
           <ul>
-              <li><a href="#">Home</a></li>
+              <router-link to="/home">Home</router-link>
               <li><a href="#">About</a></li>
               <li><a href="#">Features</a></li>
               <li><a href="#">Contact</a></li>

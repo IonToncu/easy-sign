@@ -8,7 +8,7 @@
           <i class="fas fa-crow fa-2x me-3 pt-5 mt-xl-4" style="color: #709085;"></i>
           <span class="h1 fw-bold mb-0">Logo</span>
         </div>
-
+        <p v-text="email"></p>
         <div class="d-flex align-items-center h-custom-2 px-5 ms-xl-4 mt-5 pt-5 pt-xl-0 mt-xl-n5">
 
           <form style="width: 23rem;">
@@ -16,9 +16,10 @@
             <h3 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Log in</h3>
 
             <div class="form-outline mb-4">
-              <input type="email" v-model="email" id="form2Example18" class="form-control form-control-lg" required>
-              <label class="form-label" for="form2Example18">Email address</label>
+              <input type="email" id="email" class="form-control form-control-lg" v-model="email" required>
+              <label class="form-label" for="email">Email address</label>
             </div>
+
 
             <div class="form-outline mb-4">
               <input type="password" v-model="password" id="form2Example28" class="form-control form-control-lg" required>
@@ -26,7 +27,7 @@
             </div>
 
             <div class="pt-1 mb-4">
-              <button class="btn btn-info btn-lg btn-block" type="button" @click="login()">Login</button>
+              <button class="btn btn-info btn-lg btn-block" type="button" @click="login()" :disabled="!email || !password">Login</button>
             </div>
 
             <p class="small mb-5 pb-lg-2"><a class="text-muted" href="#!">Forgot password?</a></p>
@@ -54,13 +55,20 @@ export default {
     return {
       email: '',
       password: '',
+      isValid: false
     }
   },
   methods: {
     login() {
-      this.$store.dispatch('logout')
-    }
+      this.$store.dispatch('login', { email: this.email, password: this.password });
+    },
+    validateEmail() {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(this.email);
+      }
+
   },
 
 }
+
 </script>

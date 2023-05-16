@@ -1,9 +1,5 @@
 <template>
   <Header>
-    <nav>
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </nav>
   </Header>
   
   <router-view/>
@@ -11,10 +7,17 @@
 
 <script>
 import Header from "@/components/Header.vue";
+import router from "@/router";
 
 export default {
   components: {
     Header,
+  },
+  methods: {
+    homePage() {
+      // router.push({ path: 'home' })
+      console.log("test")
+    },
   },
 };
 </script>

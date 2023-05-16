@@ -12,18 +12,18 @@
             </div>
             <div class="col-xl-6">
               <div class="card-body p-md-5 text-black">
-                <h3 class="mb-5 text-uppercase">Student registration form</h3>
+                <h3 class="mb-5 text-uppercase">Registration form</h3>
 
                 <div class="row">
                   <div class="col-md-6 mb-4">
                     <div class="form-outline">
-                      <input type="text" id="form3Example1m" class="form-control form-control-lg" />
+                      <input type="text" id="form3Example1m" class="form-control form-control-lg" v-model="firstName"/>
                       <label class="form-label" for="form3Example1m">First name</label>
                     </div>
                   </div>
                   <div class="col-md-6 mb-4">
                     <div class="form-outline">
-                      <input type="text" id="form3Example1n" class="form-control form-control-lg" />
+                      <input type="text" id="form3Example1n" class="form-control form-control-lg" v-model="lastName"/>
                       <label class="form-label" for="form3Example1n">Last name</label>
                     </div>
                   </div>
@@ -32,93 +32,44 @@
                 <div class="row">
                   <div class="col-md-6 mb-4">
                     <div class="form-outline">
-                      <input type="text" id="form3Example1m1" class="form-control form-control-lg" />
-                      <label class="form-label" for="form3Example1m1">Mother's name</label>
+                      <input  type="password" id="password" class="form-control form-control-lg" v-model="password"/>
+                      <label class="form-label" for="form3Example1m1">Password</label>
                     </div>
                   </div>
                   <div class="col-md-6 mb-4">
                     <div class="form-outline">
-                      <input type="text" id="form3Example1n1" class="form-control form-control-lg" />
-                      <label class="form-label" for="form3Example1n1">Father's name</label>
+                      <input  type="password" id="password" class="form-control form-control-lg" v-model="confirmPassword"/>
+                      <label class="form-label" for="form3Example1m1">Confirm password</label>
                     </div>
                   </div>
                 </div>
 
                 <div class="form-outline mb-4">
-                  <input type="text" id="form3Example8" class="form-control form-control-lg" />
-                  <label class="form-label" for="form3Example8">Address</label>
-                </div>
-
-                <div class="d-md-flex justify-content-start align-items-center mb-4 py-2">
-
-                  <h6 class="mb-0 me-4">Gender: </h6>
-
-                  <div class="form-check form-check-inline mb-0 me-4">
-                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="femaleGender"
-                      value="option1" />
-                    <label class="form-check-label" for="femaleGender">Female</label>
-                  </div>
-
-                  <div class="form-check form-check-inline mb-0 me-4">
-                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="maleGender"
-                      value="option2" />
-                    <label class="form-check-label" for="maleGender">Male</label>
-                  </div>
-
-                  <div class="form-check form-check-inline mb-0">
-                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="otherGender"
-                      value="option3" />
-                    <label class="form-check-label" for="otherGender">Other</label>
-                  </div>
-
+                  <input type="email" id="email" class="form-control form-control-lg" v-model="email" required>
+                  <label class="form-label" for="email">Email address</label>
                 </div>
 
                 <div class="row">
                   <div class="col-md-6 mb-4">
-
-                    <select class="select">
-                      <option value="1">State</option>
-                      <option value="2">Option 1</option>
-                      <option value="3">Option 2</option>
-                      <option value="4">Option 3</option>
-                    </select>
-
-                  </div>
-                  <div class="col-md-6 mb-4">
-
-                    <select class="select">
-                      <option value="1">City</option>
-                      <option value="2">Option 1</option>
-                      <option value="3">Option 2</option>
-                      <option value="4">Option 3</option>
-                    </select>
-
+                    <div>
+                    <label for="user-type">User Type:</label>
+                      <select id="user-type" v-model="userType" @change="toggleFileUpload">
+                        <option value="client">Client</option>
+                        <option value="notary">Notary</option>
+                      </select>
+                    </div>`
                   </div>
                 </div>
 
-                <div class="form-outline mb-4">
-                  <input type="text" id="form3Example9" class="form-control form-control-lg" />
-                  <label class="form-label" for="form3Example9">DOB</label>
-                </div>
 
-                <div class="form-outline mb-4">
-                  <input type="text" id="form3Example90" class="form-control form-control-lg" />
-                  <label class="form-label" for="form3Example90">Pincode</label>
-                </div>
-
-                <div class="form-outline mb-4">
-                  <input type="text" id="form3Example99" class="form-control form-control-lg" />
-                  <label class="form-label" for="form3Example99">Course</label>
-                </div>
-
-                <div class="form-outline mb-4">
-                  <input type="text" id="form3Example97" class="form-control form-control-lg" />
-                  <label class="form-label" for="form3Example97">Email ID</label>
+                <div>
+                  <input type="file" @change="handleFileUpload">
                 </div>
 
                 <div class="d-flex justify-content-end pt-3">
                   <button type="button" class="btn btn-light btn-lg">Reset all</button>
-                  <button type="button" class="btn btn-warning btn-lg ms-2">Submit form</button>
+                  <button type="button" class="btn btn-warning btn-lg ms-2"  :disabled="!email ||
+                  !password || !confirmPassword || !firstName || !userType || !lastName" @click="registration()">Submit form</button>
                 </div>
 
               </div>
@@ -130,3 +81,77 @@
   </div>
 </section>
 </template>
+
+<script>
+import store from '@/store';
+const axios = require('axios');
+
+export default {
+  data() {
+    return {
+      firstName: '',
+      lastName: '',
+      confirmPassword: '',
+      email: '',
+      password: '',
+      userType: '',
+      file: null,
+    }
+  },
+  methods: {
+    registration() {
+      if (this.userType === 'notary'){
+        this.uploadFile()
+      }else{
+        console.log(this.firstName)
+        this.$store.dispatch('registrationCustomer', { 
+        name: this.firstName,
+        lastName: this.lastName,
+        email: this.email,
+        password: this.password });
+      }
+      
+    },
+    toggleFileUpload() {
+      if (this.userType !== 'notary') {
+        this.showFileUpload = true
+      } else {
+        this.showFileUpload = false
+      }
+    },
+    handleFileUpload(event) {
+      this.file = event.target.files[0]
+    },
+    uploadFile() {
+      if (!this.file) {
+        // No file selected
+        return;
+      }
+      const formData = new FormData();
+      formData.append('file', this.file);
+      formData.append('username', this.firstName + " " + this.lastName);
+      formData.append('firstName', this.firstName);
+      formData.append('lastName', this.lastName);
+      formData.append('email', this.email);
+      formData.append('password', this.password);
+
+      axios
+        .post('http://localhost:8075/api/v1/reg/registration/notary', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        })
+        .then(response => {
+          // File upload success
+          console.log('File uploaded:', response.data);
+        })
+        .catch(error => {
+          // File upload error
+          console.error('File upload error:', error);
+        });
+    }
+  },
+
+}
+
+</script>
