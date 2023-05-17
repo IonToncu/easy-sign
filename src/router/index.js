@@ -21,7 +21,7 @@ const routes = [
   {
     path: '/login',
     name: 'login',
-    component: LoginView
+    component: LoginView,
   },
   {
     path: '/registration',
@@ -34,13 +34,14 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
 })
+
 router.beforeEach((to, from, next) => {
   const isAuthenticated = localStorage.getItem('isAuthenticated')
-  if (to.matched.some(route => route.meta.requiresAuth) && !isAuthenticated) {
-    // Redirect to login page or another unauthorized page
+  if (to.path === '/login' && isAuthenticated) {
+    next('/home');
+  } else if (to.matched.some(route => route.meta.requiresAuth) && !isAuthenticated) {
     next('/login');
   } else {
-    // Proceed to the requested route
     next();
   }
 });

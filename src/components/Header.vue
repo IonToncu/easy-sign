@@ -5,10 +5,9 @@
         </div>
         <nav class="header__nav">
           <ul>
-              <router-link to="/home">Home</router-link>
-              <li><a href="#">About</a></li>
-              <li><a href="#">Features</a></li>
-              <li><a href="#">Contact</a></li>
+              
+              <li><router-link to="/home">Home</router-link></li>
+              <li><router-link to="/profile">profile</router-link></li>
           </ul>
         </nav>
     </header>
@@ -34,11 +33,11 @@
   background-color: #121212;
   padding: 1rem;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  height: 80px;
+  height: 4rem;
 }
 
 .header__logo img {
-  height: 70px;
+  height: 4rem;
 }
 
 .header__nav ul {

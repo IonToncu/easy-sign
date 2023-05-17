@@ -1,8 +1,8 @@
 <template>
   <div class="static-block"></div>
-  <div class="static-block-left"></div>
-  <h1>{{ user }}</h1>
-  <button @click="test">test</button>
+
+  <ModalFromTop class="ModalFromTop">  </ModalFromTop>
+
   <div class="search">
     <input class="serch-input" v-model="query" type="text" placeholder="Search...">
   </div>
@@ -16,7 +16,7 @@
               <h4 class="card-title">Title</h4>
               <p class="card-text">Signed: Shaina Thiel</p>
               <time datetime="3/30/2023" style="margin-right:65%">3/30/2023</time>
-              <img src="@/assets/icon/denied.png" class="card-img" alt="STATUS">
+              <img src="@/assets/icon/checked.png" class="card-img" alt="STATUS">
           </div>
         </div>
     </div>
@@ -28,13 +28,14 @@
 // @ is an alias to /src
 import HelloWorld from '@/components/HelloWorld.vue'
 import FolderCard from '@/components/FolderCard.vue';
+import ModalFromTop from '@/components/ModalFromTop.vue';
 import store from '@/store';
 import auth from '../store/auth';
 
 export default {
   name: 'HomeView',
   components: {
-    HelloWorld
+    HelloWorld, ModalFromTop
   },
   data() {
     return {
@@ -57,18 +58,36 @@ export default {
 </script>
 
 <style scoped>
+.ModalFromTop{
+  position:fixed;
+  left: 0%;
+  margin-top: 10px;
+  margin-left: 20px;
+  border-radius: 15px;
+}
 .search{
   max-width: 80%;
 }
 .serch-input{
-  max-width: 80%;
-  width: 80%;
-  margin-top: 5px;
-  height: 50px;
-  transform: translate(16%, 0%);
+  max-width: 82%;
+  width: 81.5%;
+  transform: translate(15.5%, 0%);
   border-radius: 15px;
   border-color: #ffffff;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+  height: 3rem;
+  margin: 10px
+}
+.add-folder-button{
+  position: fixed;
+  color: #ffffff;
+  width: 10%;
+  transform: translate(1.5%, 0%);
+  border-radius: 15px;
+  border-color: #ffffff;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+  height: 3rem;
+  margin: 10px
 }
 .home {
   max-width: 800px;
@@ -80,8 +99,7 @@ export default {
   position: fixed;
   right: 0;
   width: 20%;
-  top: 15%;
-  height: 85%;
+  top: 10%;
   background-color: #830000;
 }
 
@@ -98,28 +116,28 @@ export default {
 }
 .static-block {
   position: fixed;
-  top: 0;
-  right: 0;
-  width: 15%;
-  top: 10%;
-  height: 85%;
-  background-color: #ffffff;
-  border-radius: 15px;
-  margin: 10px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    top: 0;
+    right: 0;
+    width: 16%;
+    top: 79px;
+    height: 87%;
+    background-color: #ffffff;
+    border-radius: 15px;
+    margin: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
 }
 .scrollable-block {
   position: absolute;
-  top: 65%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 65%;
-  max-height: 95%;
-  overflow: auto;
-  margin-top: 2%;
-  border-radius: 20px;
-  background-color: #ffffff;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    top: 53%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 65%;
+    max-height: 80%;
+    overflow: auto;
+    margin-top: 2%;
+    border-radius: 15px;
+    background-color: #ffffff;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
 }
 
 .content {
@@ -129,13 +147,14 @@ export default {
 .folder-list-box {
   display: flex;
   flex-wrap: wrap;
+  height: 50%;
   border-radius: 20px;
 }
 
 .boxe {
   width: 17rem;
   height: 300px;
-  background-color: #ccc;
+  background-color: #212529;
   border-radius: 10px;
   margin: 10px;
 }
@@ -146,17 +165,17 @@ export default {
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1; /* Color of the scrollbar track */
+  background: #f1f1f100; /* Color of the scrollbar track */
 }
 
 ::-webkit-scrollbar-thumb {
   background-color: #88888800; /* Color of the scrollbar thumb */
   border-radius: 20px; /* Rounded corners of the thumb */
-  border: 3px solid #f1f1f1; /* Border around the thumb */
+  border: 3px solid #f1f1f100; /* Border around the thumb */
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background-color: #555; /* Color of the scrollbar thumb on hover */
+  background-color: #55555500; /* Color of the scrollbar thumb on hover */
 }
 
 .card {
@@ -174,11 +193,13 @@ export default {
     font-family: Inter;
     font-size: 24px;
     font-weight: 700;
+    color: #ffffffd0;
   }
   
   .card-text {
     width: 65%;
     opacity: 65%;
+    color: #ffffffd0;
   }
   
   .card-img {
