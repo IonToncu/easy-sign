@@ -1,7 +1,8 @@
 <template>
   <div class="static-block"></div>
   <div class="static-block-left"></div>
-
+  <h1>{{ user }}</h1>
+  <button @click="test">test</button>
   <div class="search">
     <input class="serch-input" v-model="query" type="text" placeholder="Search...">
   </div>
@@ -27,6 +28,8 @@
 // @ is an alias to /src
 import HelloWorld from '@/components/HelloWorld.vue'
 import FolderCard from '@/components/FolderCard.vue';
+import store from '@/store';
+import auth from '../store/auth';
 
 export default {
   name: 'HomeView',
@@ -36,12 +39,18 @@ export default {
   data() {
     return {
       boxes: [1, 2, 3, 4, 5, 6, 1, 2, 3, 2, 3, 4, 5, 6, 1, 2], // You can replace this with your own data,
-      query: ''
+      query: '',
+      user: auth.user,
     }
   },
     watch: {
       query(newVal) {
         this.$emit('search', newVal)
+      }
+    },
+    methods: {
+      test() {
+        console.log(auth);
       }
     }
   };

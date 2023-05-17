@@ -1,18 +1,39 @@
 import environment from '@/environment/environment';
+import roles from "./module/Roles";
 import Vuex from 'vuex';
 import router from '@/router';
+import authModule from './auth';
 
 const axios = require('axios');
 
+
 const vuex = new Vuex.Store({
-    state: {
-      count: 0
+  state: {
+    token: localStorage.getItem('token') || '',
+    email: localStorage.getItem('email') || '',
+    user: localStorage.getItem('username')|| '',
+    status: '',
+    error: null,
+  },
+  mutations: {
+    auth_request(state) {
+      state.status = 'loading';
     },
-    mutations: {
-      increment(state) {
-        state.count++;
+    auth_success(state, { username, firstName, lastName, token, isNotary, email }) {
+      if(isNotary) {
+        authModule.setAuthData(username, firstName, lastName, email, token, roles.NOTAR);
+      }else{
+        authModule.setAuthData(username, firstName, lastName, email, token, roles.CUSTOMER);
       }
     },
+    auth_error(state, error) {
+      state.status = 'error';
+      state.error = error;
+    },
+    logout(state) {
+      localStorage.clear();
+    },
+  },
     actions: {
       increment(context) {
         context.commit('increment');
@@ -23,6 +44,7 @@ const vuex = new Vuex.Store({
       logout() {
         console.log('test login');
     },
+    //login for all type of users
       async login({ commit }, { email, password }) {
         try {
           const response = await axios.post('http://localhost:8075/api/v1/auth/login', {
@@ -33,13 +55,14 @@ const vuex = new Vuex.Store({
               'Content-Type': 'application/json'
             }
           });
+          const firstName = response.data.firstName;
+          const lastName = response.data.lastName;
+          const isNotary = response.data.isNotary;
+          const username = response.data.username;
           const token = response.data.token;
+          commit('auth_success', { username, firstName, lastName, token, isNotary, email});
           router.push({ path: 'home' }) 
-          // Set the token in the Vuex store or in a cookie/local storage
-        } catch (error) {
-          // Handle the error
-          console.error(error);
-        }
+        } catch (error) {console.error(error);}
       },
       async registrationCustomer({ commit }, { email, password }) {
         try {
@@ -93,4 +116,4 @@ const vuex = new Vuex.Store({
     }
   });
 
-export default vuex
+  export default vuex;

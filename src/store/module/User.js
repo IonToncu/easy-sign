@@ -1,6 +1,7 @@
 class User {
     constructor(name) {
       this.name = name;
+      this.token = null;
       this.folders = [];
     }
   
@@ -21,5 +22,9 @@ class User {
         files.push(...folder.files);
       }
       return files;
+    }
+
+    getUserName() {
+      return this.name;
     }
   }

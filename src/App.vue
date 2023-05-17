@@ -1,5 +1,10 @@
 <template>
   <Header>
+    <nav>
+      <router-link @click="home()">Home</router-link> |
+      <router-link to="/about">About</router-link>
+    </nav>
+    <router-view></router-view>
   </Header>
   
   <router-view/>
@@ -14,9 +19,8 @@ export default {
     Header,
   },
   methods: {
-    homePage() {
+    home() {
       // router.push({ path: 'home' })
-      console.log("test")
     },
   },
 };
