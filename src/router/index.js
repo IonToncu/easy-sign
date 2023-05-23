@@ -3,11 +3,20 @@ import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
 import RegistrationView from '../views/RegistrationView.vue'
 import UserProfileView from '../views/UserProfileView.vue'
+import FolderView from '../views/FolderView.vue'
 
 const routes = [
   {
     path: '/home',
     name: 'home',
+    component: HomeView,
+    meta: {
+      requiresAuth: true // This route requires authentication
+    }
+  },
+  {
+    path: '/',
+    name: 'home2',
     component: HomeView,
     meta: {
       requiresAuth: true // This route requires authentication
@@ -27,6 +36,12 @@ const routes = [
     path: '/registration',
     name: 'registration',
     component: RegistrationView
+  },
+  { 
+    path: '/folder/:id',
+    name: 'folder',
+    component: FolderView,
+    props: true 
   }
 ]
 
@@ -37,6 +52,7 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const isAuthenticated = localStorage.getItem('isAuthenticated')
+
   if (to.path === '/login' && isAuthenticated) {
     next('/home');
   } else if (to.matched.some(route => route.meta.requiresAuth) && !isAuthenticated) {
@@ -44,6 +60,7 @@ router.beforeEach((to, from, next) => {
   } else {
     next();
   }
+
 });
 
 export default router

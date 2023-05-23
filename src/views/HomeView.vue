@@ -4,16 +4,17 @@
   <ModalFromTop class="ModalFromTop">  </ModalFromTop>
 
   <div class="search">
-    <input class="serch-input" v-model="query" type="text" placeholder="Search...">
+    <!-- <input class="serch-input" v-model="query" placeholder="Search..."> -->
+    <v-text-field :rules="rules" placeholder="Search..." v-model="query"></v-text-field>
   </div>
 
   <div class="scrollable-block">
   <div class="content">
     <div class="folder-list-box">
-          <div v-for="(boxe, index) in boxes" :key="index" class="boxe">
+          <div v-for="(boxe, index) in filteredList" :key="index" class="boxe" @click="redirestToFolderPage(boxe.id)">
             <img class="card-img-top" src="@/assets/House_blueprint.jpg" alt="Card image cap">
             <div class="card-body">
-              <h4 class="card-title">Title</h4>
+              <h4 class="card-title">{{ boxe.fileName }}</h4>
               <p class="card-text">Signed: Shaina Thiel</p>
               <time datetime="3/30/2023" style="margin-right:65%">3/30/2023</time>
               <img src="@/assets/icon/checked.png" class="card-img" alt="STATUS">
@@ -26,24 +27,27 @@
 
 <script>
 // @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
 import FolderCard from '@/components/FolderCard.vue';
 import ModalFromTop from '@/components/ModalFromTop.vue';
 import store from '@/store';
 import auth from '../store/auth';
+import axios from 'axios';
 
 export default {
   name: 'HomeView',
   components: {
-    HelloWorld, ModalFromTop
+    ModalFromTop
   },
   data() {
     return {
-      boxes: [1, 2, 3, 4, 5, 6, 1, 2, 3, 2, 3, 4, 5, 6, 1, 2], // You can replace this with your own data,
+      folders: null, // You can replace this with your own data,
       query: '',
       user: auth.user,
     }
   },
+    mounted() {
+      this.loadCustomerFolders(); // Call the method to load data when the component is mounted
+    },
     watch: {
       query(newVal) {
         this.$emit('search', newVal)
@@ -52,8 +56,43 @@ export default {
     methods: {
       test() {
         console.log(auth);
+      },
+      loadCustomerFolders() {
+        axios.get('http://localhost:8075/api/v1/customer/folders', {
+            headers: {
+              Authorization: 'bearer_' + localStorage.getItem('token'),
+              'Content-Type': 'multipart/form-data',
+            }
+          })
+          .then(response => {
+            console.log(response.data.folders);
+            this.folders = response.data.folders;
+          })
+          .catch(error => {
+            if(error.response.status == 500){
+              localStorage.clear();
+              this.$router.push('/login');
+            }
+            console.log(error);
+          })
+      },
+      redirestToFolderPage(folderId) {
+        this.$router.push('/folder/' + folderId);
+      },
+    },
+    computed: {
+    filteredList() {
+      const searchQuery = this.query.toLowerCase();
+      console.log(searchQuery);
+      if (!searchQuery) {
+        return this.folders; // Return the original list if the search query is empty
+      } else {
+        return this.folders.filter(item =>
+          item.fileName.toLowerCase().includes(searchQuery)
+        );
       }
     }
+  }
   };
 </script>
 
@@ -66,18 +105,11 @@ export default {
   border-radius: 15px;
 }
 .search{
-  max-width: 80%;
-}
-.serch-input{
-  max-width: 82%;
-  width: 81.5%;
-  transform: translate(15.5%, 0%);
-  border-radius: 15px;
-  border-color: #ffffff;
+  width: 65%;
+  transform: translate(27%, 30%);
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
-  height: 3rem;
-  margin: 10px
 }
+
 .add-folder-button{
   position: fixed;
   color: #ffffff;
@@ -189,7 +221,7 @@ export default {
   }
   
   .card-title {
-    margin-right: 75%;
+    /* margin-right: 75%; */
     font-family: Inter;
     font-size: 24px;
     font-weight: 700;

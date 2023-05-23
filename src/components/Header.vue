@@ -5,10 +5,11 @@
         </div>
         <nav class="header__nav">
           <ul>
-              
               <li><router-link to="/home">Home</router-link></li>
               <li><router-link to="/profile">profile</router-link></li>
+              <li><button @click="logout">Logout</button></li>
           </ul>
+         
         </nav>
     </header>
 </template>
@@ -21,6 +22,12 @@
         default: "EasySign",
       },
     },
+    methods: {
+      logout() {
+        localStorage.clear();
+        this.$router.push('/login');
+      }
+  }
     
   };
   </script>

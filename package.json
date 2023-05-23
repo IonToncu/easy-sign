@@ -8,13 +8,18 @@
   },
   "dependencies": {
     "@popperjs/core": "^2.11.7",
+    "@syncfusion/ej2-vue-pdfviewer": "^21.2.5",
     "@vue/compat": "^3.3.2",
     "axios": "^1.4.0",
     "bootstrap": "^5.2.3",
     "bootstrap-vue": "^2.23.1",
     "core-js": "^3.8.3",
     "jwt-decode": "^3.1.2",
+    "pdfjs-dist": "^3.6.172",
+    "pdfvuer": "^2.0.1",
+    "pspdfkit": "^2023.3.0",
     "vue": "^3.3.2",
+    "vue-pdf": "^4.3.0",
     "vue-router": "^4.1.6",
     "vuetify": "^3.2.5",
     "vuex": "^4.1.0"
@@ -22,6 +27,8 @@
   "devDependencies": {
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-plugin-router": "~5.0.0",
-    "@vue/cli-service": "~5.0.0"
+    "@vue/cli-service": "~5.0.0",
+    "webpack": "^5.83.1",
+    "webpack-dev-server": "^4.15.0"
   }
 }

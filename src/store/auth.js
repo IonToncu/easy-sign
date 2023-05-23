@@ -22,6 +22,7 @@ class Authentication {
     this.role = role;
 
     localStorage.setItem('token', token)
+    console.log(localStorage.setItem('token', token))
     localStorage.setItem('username', username)
     localStorage.setItem('firstName', firstName)  
     localStorage.setItem('lastName', lastName)
