@@ -25,6 +25,7 @@ const vuex = new Vuex.Store({
       }else{
         authModule.setAuthData(username, firstName, lastName, email, token, roles.CUSTOMER);
       }
+
     },
     auth_error(state, error) {
       state.status = 'error';
@@ -60,8 +61,15 @@ const vuex = new Vuex.Store({
           const isNotary = response.data.isNotary;
           const username = response.data.username;
           const token = response.data.token;
+          
           commit('auth_success', { username, firstName, lastName, token, isNotary, email});
-          router.push({ path: 'home' }) 
+          console.log(isNotary);
+          
+          if(username === "ADMIN"){
+            router.push({ path: '/admin' })
+          }          
+          else if(isNotary) router.push({ path: '/notary' })
+          else router.push({ path: 'home' }) 
         } catch (error) {console.error(error);}
       },
       async registrationCustomer({ commit }, { email, password }) {

@@ -10,7 +10,7 @@
       ></v-img>
   
       <v-card-title>
-        {{ documentName }}
+        {{ candidateName }}
       </v-card-title>
   
       <v-card-subtitle>
@@ -18,7 +18,7 @@
       </v-card-subtitle>
   
       <v-card-actions>
-        <DocumentModalCard :document-id=documentId :document-name=documentName></DocumentModalCard>
+        <CandidatemodalCard :candidate-id=candidateId :candidate-name=candidateName></CandidatemodalCard>
         <v-spacer></v-spacer>
       </v-card-actions>
   
@@ -34,18 +34,18 @@
   </template>   
 
 <script>
-import DocumentModalCard from '@/components/DocumentModalCard.vue';
+import CandidatemodalCard from './CandidatemodalCard.vue';
 
 export default {
   components: {
-    DocumentModalCard
+    CandidatemodalCard
   },
   data: () => ({
     show: false,
   }),
   props: {
-    documentName: String,
-    documentId: Number
+    candidateName: String,
+    candidateId: Number
   }
 }
 </script>

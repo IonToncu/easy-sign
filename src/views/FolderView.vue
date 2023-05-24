@@ -1,7 +1,17 @@
 <template>
+ <v-row class="buttons">
+  <v-col>
+    <AddDocumentModal :folder-id="itemId"></AddDocumentModal>
+  </v-col>
+  <v-col>
+    <v-btn @click="show = !show, postFolder()">
+      <v-text>Post folder</v-text>
+    </v-btn>
+  </v-col>
+</v-row>
+
   <div>
     <h1>{{ folderName }}</h1>
-    <AddDocumentModal :folder-id=itemId></AddDocumentModal>
     <v-card class="mx-auto" max-width="80%" max-height="80%">
       <v-item-group selected-class="bg-primary">
         <v-container>
@@ -52,13 +62,32 @@ export default {
         console.log(error);
       });
   },
-  methods: {},
+  methods: {
+    postFolder(){
+      axios
+      .get(`http://localhost:8075/api/v1/customer/customer_post_Folder/` + this.itemId, {
+        headers: {
+          Authorization: 'bearer_' + localStorage.getItem('token'),
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+      .then(response => {
+        console.log(response.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+  },
 };
 </script>
 <style scoped>
-.document-button{
-  margin: 0;
-  padding: 0;
-  color: black;
+
+.buttons{
+  position: absolute;
+  display: inline;
+  top: 9%;
+  left: 1%;
+  width: 10%;
 }
 </style>
