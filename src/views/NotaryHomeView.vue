@@ -1,6 +1,6 @@
 <template>
     <div class="home">
-      <h1>Admin home page</h1>
+      <h1>Notary home page</h1>
     </div>
     <div>
         <h1>{{ folderName }}</h1>
@@ -10,8 +10,7 @@
             <v-row>
                 <v-col v-for="(publicFolder, index) in publicFolders" :key="index" cols="6" md="3">
                 <v-item v-slot="{ isSelected, selectedClass, toggle }">
-                    <!-- <CandidateCard :candidate-name="publicFolder.firstName" :candidate-id="publicFolder.id"></CandidateCard> -->
-                    <!-- <h1>{{ candidate.firstName }}</h1> -->
+                    <FolderCard :folder-id="publicFolder.id"></FolderCard>
                 </v-item>
                 </v-col>
             </v-row>
@@ -23,12 +22,12 @@
   
   <script>
 import axios from 'axios';
-import CandidateCard from '@/components/CandidateCard.vue';
+import FolderCard from '@/components/FolderCard.vue';
 
 
 export default {
   components: {
-    CandidateCard
+    FolderCard
   },
     data() {
         return {
@@ -41,13 +40,15 @@ export default {
     },
     methods: {
         loadFolders() {
-        axios.get('http://localhost:8075/api/v1/admin/notary/allFolders', {
+          console.log("test");
+        axios.get('http://localhost:8075/api/v1/admins/notary/allFolders', {
             headers: {
               Authorization: 'bearer_' + localStorage.getItem('token'),
               'Content-Type': 'multipart/form-data',
             }
           })
           .then(response => {
+            console.log("test");
             this.publicFolders = response.data.publicFolder;
             this.personalFolders = response.data.personalFolder;
             
@@ -56,10 +57,6 @@ export default {
             console.log(this.personalFolders);
           })
           .catch(error => {
-            if(error.response.status == 500){
-              localStorage.clear();
-              this.$router.push('/login');
-            }
             console.log(error);
           })
       },

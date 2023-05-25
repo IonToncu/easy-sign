@@ -1,6 +1,6 @@
 <template>
     <div class="home">
-      <h1>Admin home page</h1>
+      <h1>Admin test home page</h1>
     </div>
     <div>
         <h1>{{ folderName }}</h1>

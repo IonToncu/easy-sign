@@ -1,24 +1,51 @@
 <template>
-    <div class="card text-white bg-dark mb-6" style="width: 18rem;">
-      <img class="card-img-top" src="@/assets/House_blueprint.jpg" alt="Card image cap">
-      <div class="card-body">
-        <h4 class="card-title">Title</h4>
-        <p class="card-text">Signed: Shaina Thiel</p>
-        <time datetime="3/30/2023" style="margin-right:65%">3/30/2023</time>
-        <img src="@/assets/icon/pending.png" class="card-img" alt="STATUS">
+  <v-card
+    class="mx-auto"
+    max-width="344"
+  >
+    <v-img
+      src="https://cognota.com/wp-content/uploads/2019/09/blueprint.jpg"
+      height="200px"
+      cover
+    ></v-img>
+
+    <v-card-title>
+      {{ documentName }}
+    </v-card-title>
+
+    <v-card-subtitle>
+      1,000 miles of wonder
+    </v-card-subtitle>
+
+    <v-card-actions>
+      <v-btn @click="openFolder()">Open folder</v-btn>
+      <v-spacer></v-spacer>
+    </v-card-actions>
+
+    <v-expand-transition>
+      <div v-show="show">
+        
       </div>
-    </div>
-  </template>
-  
-  <script>
+    </v-expand-transition>
+  </v-card>
+</template>   
+
+<script>
   import "bootstrap/dist/css/bootstrap.min.css";
   import "bootstrap";
-  
-  export default {
+
+export default {
+
     name: "FolderCard",
     props: {
       msg: String,
+      folderId: Number,
     },
+    methods: {
+      openFolder() {
+        this.$router.push({ name: 'folder', params: { id: this.folderId } })
+      }
+    }
   };
   </script>
   

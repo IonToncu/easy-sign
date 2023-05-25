@@ -1,36 +1,31 @@
 <template>
   <div class="static-block"></div>
 
-  <ModalFromTop class="ModalFromTop">  </ModalFromTop>
+  <ModalFromTop class="ModalFromTop"></ModalFromTop>
 
   <div class="search">
-    <!-- <input class="serch-input" v-model="query" placeholder="Search..."> -->
     <v-text-field :rules="rules" placeholder="Search..." v-model="query"></v-text-field>
   </div>
 
   <div class="scrollable-block">
-  <div class="content">
-    <div class="folder-list-box">
-          <div v-for="(boxe, index) in filteredList" :key="index" class="boxe" @click="redirestToFolderPage(boxe.id)">
-            <img class="card-img-top" src="@/assets/House_blueprint.jpg" alt="Card image cap">
-            <div class="card-body">
-              <h4 class="card-title">{{ boxe.fileName }}</h4>
-              <p class="card-text">Signed: Shaina Thiel</p>
-              <time datetime="3/30/2023" style="margin-right:65%">3/30/2023</time>
-              <img src="@/assets/icon/checked.png" class="card-img" alt="STATUS">
+    <div class="content">
+      <div class="folder-list-box">
+        <div v-for="(boxe, index) in filteredList" :key="index" class="boxe" @click="redirectToFolderPage(boxe.id)">
+          <img class="card-img-top" src="@/assets/House_blueprint.jpg" alt="Card image cap">
+          <div class="card-body">
+            <h4 class="card-title">{{ boxe.fileName }}</h4>
+            <p class="card-text">Signed: Shaina Thiel</p>
+            <time datetime="3/30/2023" style="margin-right:65%">3/30/2023</time>
+            <img src="@/assets/icon/checked.png" class="card-img" alt="STATUS">
           </div>
         </div>
+      </div>
     </div>
   </div>
-</div>
 </template>
 
 <script>
-// @ is an alias to /src
-import FolderCard from '@/components/FolderCard.vue';
 import ModalFromTop from '@/components/ModalFromTop.vue';
-import store from '@/store';
-import auth from '../store/auth';
 import axios from 'axios';
 
 export default {
@@ -40,60 +35,52 @@ export default {
   },
   data() {
     return {
-      folders: null, // You can replace this with your own data,
-      query: '',
-      user: auth.user,
-    }
+      folders: null,
+      query: ''
+    };
   },
-    mounted() {
-      this.loadCustomerFolders(); // Call the method to load data when the component is mounted
+  mounted() {
+    this.loadCustomerFolders();
+  },
+  methods: {
+    loadCustomerFolders() {
+      axios
+        .get('http://localhost:8075/api/v1/customer/folders', {
+          headers: {
+            Authorization: 'bearer_' + localStorage.getItem('token'),
+            'Content-Type': 'multipart/form-data',
+          },
+        })
+        .then(response => {
+          console.log(response.data.folders);
+          this.folders = response.data.folders;
+        })
+        .catch(error => {
+          if (error.response.status == 500) {
+            localStorage.clear();
+            this.$router.push('/login');
+          }
+          console.log(error);
+        });
     },
-    watch: {
-      query(newVal) {
-        this.$emit('search', newVal)
-      }
+    redirectToFolderPage(folderId) {
+      this.$router.push('/folder/' + folderId);
     },
-    methods: {
-      test() {
-        console.log(auth);
-      },
-      loadCustomerFolders() {
-        axios.get('http://localhost:8075/api/v1/customer/folders', {
-            headers: {
-              Authorization: 'bearer_' + localStorage.getItem('token'),
-              'Content-Type': 'multipart/form-data',
-            }
-          })
-          .then(response => {
-            console.log(response.data.folders);
-            this.folders = response.data.folders;
-          })
-          .catch(error => {
-            if(error.response.status == 500){
-              localStorage.clear();
-              this.$router.push('/login');
-            }
-            console.log(error);
-          })
-      },
-      redirestToFolderPage(folderId) {
-        this.$router.push('/folder/' + folderId);
-      },
-    },
-    computed: {
+  },
+  computed: {
     filteredList() {
       const searchQuery = this.query.toLowerCase();
       console.log(searchQuery);
       if (!searchQuery) {
-        return this.folders; // Return the original list if the search query is empty
+        return this.folders;
       } else {
         return this.folders.filter(item =>
           item.fileName.toLowerCase().includes(searchQuery)
         );
       }
-    }
-  }
-  };
+    },
+  },
+};
 </script>
 
 <style scoped>

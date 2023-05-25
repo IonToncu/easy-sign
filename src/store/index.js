@@ -63,11 +63,7 @@ const vuex = new Vuex.Store({
           const token = response.data.token;
           
           commit('auth_success', { username, firstName, lastName, token, isNotary, email});
-          console.log(isNotary);
-          
-          if(username === "ADMIN"){
-            router.push({ path: '/admin' })
-          }          
+          if(username === "ADMIN"){ router.push({ path: '/admin' })}          
           else if(isNotary) router.push({ path: '/notary' })
           else router.push({ path: 'home' }) 
         } catch (error) {console.error(error);}
