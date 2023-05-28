@@ -6,8 +6,7 @@
       width="1024"
     >
       <template v-slot:activator="{ props }">
-        <v-btn
-          color="primary"
+        <v-btn style="margin-top: 10%; align-items: center;"
           v-bind="props"
         >
           Add Folder

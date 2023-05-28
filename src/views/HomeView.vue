@@ -1,42 +1,174 @@
 <template>
-  <div class="static-block"></div>
+  <v-row>
+    <v-col cols="2">
 
-  <ModalFromTop class="ModalFromTop"></ModalFromTop>
+        <ModalFromTop class="ModalFromTop"></ModalFromTop>
+        <br/>
+        <br/>
+        <br/>
+      
 
-  <div class="search">
-    <v-text-field :rules="rules" placeholder="Search..." v-model="query"></v-text-field>
-  </div>
+        <v-card
+          class="mx-auto"
+          max-width="250"
+        >
+          <v-list density="compact">
+            <v-list-subheader>REPORTS</v-list-subheader>
 
-  <div class="scrollable-block">
-    <div class="content">
-      <div class="folder-list-box">
-        <div v-for="(boxe, index) in filteredList" :key="index" class="boxe" @click="redirectToFolderPage(boxe.id)">
-          <img class="card-img-top" src="@/assets/House_blueprint.jpg" alt="Card image cap">
-          <div class="card-body">
-            <h4 class="card-title">{{ boxe.fileName }}</h4>
-            <p class="card-text">Signed: Shaina Thiel</p>
-            <time datetime="3/30/2023" style="margin-right:65%">3/30/2023</time>
-            <img src="@/assets/icon/checked.png" class="card-img" alt="STATUS">
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+            <v-list-item
+              v-for="(item, i) in items"
+              :key="i"
+              :value="item"
+            >
+              <template v-slot:prepend>
+                <v-icon> {{ item.icon }}</v-icon>
+              </template>
+
+              <v-list-item-title v-text="item.text"></v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-card>
+
+      
+    </v-col>
+
+    <v-col cols="8">
+        <br/>
+        <v-card
+          class="mx-auto folder-list"
+          color="grey-lighten-3"
+        >
+          <v-card-text>
+            <v-text-field
+              :loading="loading"
+              density="compact"
+              variant="solo"
+              label="Search templates"
+              placeholder="Search..."
+              append-inner-icon="mdi-magnify"
+              single-line
+              hide-details
+              :rules="rules"
+              v-model="query"
+              @click:append-inner="onClick"
+            ></v-text-field>
+          </v-card-text>
+        </v-card>
+        <br/>
+
+        <v-card class="mx-auto folder-list"  height="45rem">
+          <v-item-group selected-class="bg-primary">
+              <v-container>
+              <v-row>
+                  <v-col v-for="(folder, index) in filteredList" :key="index"  cols="6" md="3" @click="redirectToFolderPage(folder.id)">
+                  <v-item v-slot="{ isSelected, selectedClass, toggle }">
+                      <FolderCard :folder-id="folder.id" :folder-name="folder.fileName"></FolderCard>
+                  </v-item>
+                  </v-col>
+              </v-row>
+              </v-container>
+          </v-item-group>
+        </v-card>
+      </v-col>
+
+      <v-col cols="2" style="margin-left: -1%;"> 
+        <br/>
+        <v-card
+          class="mx-auto"
+          height="51rem"
+        >
+          <v-list>
+            <v-list-subheader>Plain Variant</v-list-subheader>
+
+            <v-list-item
+              v-for="(item, i) in items"
+              :key="i"
+              :value="item"
+               variant="elevated"
+            >
+              <template v-slot:prepend>
+                <v-icon > mdi-check-circle</v-icon>
+              </template>
+
+              <v-list-item-title v-text="item.text"></v-list-item-title>
+            </v-list-item>
+          </v-list>
+
+          <v-list>
+            <v-list-subheader>Tonal Variant</v-list-subheader>
+
+            <v-list-item
+              v-for="(item, i) in items"
+              :key="i"
+              :value="item"
+              variant="elevated"
+            >
+              <template v-slot:prepend>
+                <v-icon>mdi-folder</v-icon>
+              </template>
+
+              <v-list-item-title v-text="item.text"></v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-card>
+      </v-col>
+  </v-row>
+      
+    
 </template>
 
 <script>
 import ModalFromTop from '@/components/ModalFromTop.vue';
 import axios from 'axios';
+import FolderCard from '@/components/FolderCard.vue';
 
 export default {
   name: 'HomeView',
   components: {
-    ModalFromTop
+    ModalFromTop, FolderCard
   },
   data() {
     return {
       folders: null,
-      query: ''
+      query: '',
+      items: [
+        { text: 'My Files', icon: 'mdi-folder' },
+        { text: 'Shared with me', icon: 'mdi-account-multiple' },
+        { text: 'Starred', icon: 'mdi-star' },
+        { text: 'Recent', icon: 'mdi-history' },
+        { text: 'Offline', icon: 'mdi-check-circle' },
+        { text: 'Uploads', icon: 'mdi-upload' },
+        { text: 'Backups', icon: 'mdi-cloud-upload' },
+      ],
+      activity: [
+        { type: 'subheader', title: 'Group #1' },
+        {
+          title: 'Item #1',
+          value: 1,
+        },
+        {
+          title: 'Item #2',
+          value: 2,
+        },
+        {
+          title: 'Item #3',
+          value: 3,
+        },
+        { type: 'divider' },
+        { type: 'subheader', title: 'Group #2' },
+        {
+          title: 'Item #4',
+          value: 4,
+        },
+        {
+          title: 'Item #5',
+          value: 5,
+        },
+        {
+          title: 'Item #6',
+          value: 6,
+        },
+      ],
     };
   },
   mounted() {
@@ -56,10 +188,10 @@ export default {
           this.folders = response.data.folders;
         })
         .catch(error => {
-          if (error.response.status == 500) {
-            localStorage.clear();
-            this.$router.push('/login');
-          }
+          // if (error.response.status == 500) {
+          //   localStorage.clear();
+          //   this.$router.push('/login');
+          // }
           console.log(error);
         });
     },
@@ -84,11 +216,18 @@ export default {
 </script>
 
 <style scoped>
+.notification{
+  margin-left: -2%;
+}
+.folder-list {
+  /* position: fixed; */
+  right: 2%;
+}
 .ModalFromTop{
   position:fixed;
   left: 0%;
   margin-top: 10px;
-  margin-left: 20px;
+  margin-left: 25px;
   border-radius: 15px;
 }
 .search{

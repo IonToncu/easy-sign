@@ -1,51 +1,45 @@
+
 <template>
-    <section class="vh-100">
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-sm-6 text-black">
-
-        <div class="px-5 ms-xl-4">
-          <i class="fas fa-crow fa-2x me-3 pt-5 mt-xl-4" style="color: #709085;"></i>
-          <span class="h1 fw-bold mb-0">Logo</span>
-        </div>
-        <p v-text="email"></p>
-        <div class="d-flex align-items-center h-custom-2 px-5 ms-xl-4 mt-5 pt-5 pt-xl-0 mt-xl-n5">
-
-          <form style="width: 23rem;">
-
-            <h3 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Log in</h3>
-
-            <div class="form-outline mb-4">
-              <input type="email" id="email" class="form-control form-control-lg" v-model="email" required>
-              <label class="form-label" for="email">Email address</label>
-            </div>
-
-
-            <div class="form-outline mb-4">
-              <input type="password" v-model="password" id="form2Example28" class="form-control form-control-lg" required>
-              <label class="form-label" for="form2Example28">Password</label>
-            </div>
-
-            <div class="pt-1 mb-4">
-              <button class="btn btn-info btn-lg btn-block" type="button" @click="login()" :disabled="!email || !password">Login</button>
-            </div>
-
-            <p class="small mb-5 pb-lg-2"><a class="text-muted" href="#!">Forgot password?</a></p>
-            <p>Don't have an account? <router-link to="/profile">Register here</router-link></p>
-
-          </form>
-
-        </div>
-
-      </div>
-      <div class="col-sm-6 px-0 d-none d-sm-block">
-        <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/img3.webp"
-          alt="Login image" class="w-100 vh-100" style="object-fit: cover; object-position: left;">
-      </div>
-    </div>
-  </div>
-</section>
+  <v-container fluid class="login-container" >
+    <v-card class="login-card" max-width="40%" max-height="80%">
+      <v-card-title class="text-center">
+        <h1>Login</h1>
+      </v-card-title>
+      <v-card-text>
+        <v-form @submit.prevent="login">
+          <v-text-field
+            v-model="email"
+            label="Email"
+            required
+            :rules="emailRules"
+            outlined
+          ></v-text-field>
+          <v-text-field
+            v-model="password"
+            label="Password"
+            type="password"
+            required
+            outlined
+          ></v-text-field>
+          <v-btn
+            type="submit"
+            block
+            :disabled="!validateEmail()"
+            class="mt-4"
+            color="primary"
+            @click="login"
+          >
+            Login
+          </v-btn>
+          <div style="margin: 10px;">
+            <router-link to="/register">Register</router-link>
+          </div>
+        </v-form>
+      </v-card-text>
+    </v-card>
+  </v-container>
 </template>
+
 
 <script>
 export default {
@@ -70,3 +64,25 @@ export default {
 }
 
 </script>
+
+<style scoped>
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+}
+
+.login-card {
+  width: 40%;
+  max-height: 80%;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.mt-4 {
+  margin-top: 1.5rem;
+}
+</style>

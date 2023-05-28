@@ -11,8 +11,9 @@
         <iframe ref="pdfViewer" title="PDF" height="100%" :src="fetchPdfData"></iframe>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="green darken-1" variant="text" @click="dialog = false">Disagree</v-btn>
-          <v-btn color="green darken-1" variant="text" @click="dialog = false">Agree</v-btn>
+          <v-btn color="green darken-1" variant="text" @click="dialog = false" v-show="isNotary">Approve</v-btn>
+          <v-btn color="green darken-1" variant="text" @click="dialog = false" v-show="isNotary">Decline</v-btn>
+          <v-btn color="green darken-1" variant="text" @click="dialog = false" v-show="!isNotary">Close</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -28,6 +29,7 @@ export default {
     return {
       dialog: false,
       fetchPdfData: null,
+      isNotary: false
     };
   },
   props: {
@@ -36,7 +38,9 @@ export default {
   },
   mounted() {
     var FileUrl = "";
-    if(localStorage.getItem("role") === roles.NOTAR) FileUrl = `http://localhost:8075/api/v1/admins/notary/doc/${this.documentId}`
+    if(localStorage.getItem("role") === roles.NOTAR){ 
+      FileUrl = `http://localhost:8075/api/v1/admins/notary/doc/${this.documentId}`;
+      this.isNotary = true }
     else FileUrl = `http://localhost:8075/api/v1/customer/doc/${this.documentId}`
     
     this.fetchPdf(FileUrl);

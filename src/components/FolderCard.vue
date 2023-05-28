@@ -1,13 +1,16 @@
 <template>
-  <v-card
-    class="mx-auto"
-    max-width="344"
-  >
-    <v-img
+   <v-img
       src="https://cognota.com/wp-content/uploads/2019/09/blueprint.jpg"
       height="200px"
       cover
     ></v-img>
+    
+  <v-card
+    class="mx-auto"
+    max-width="344"
+    title=folderTitle
+  >
+   
 
     <v-card-title>
       {{ documentName }}
@@ -34,17 +37,23 @@
   import "bootstrap/dist/css/bootstrap.min.css";
   import "bootstrap";
 
+
 export default {
 
     name: "FolderCard",
     props: {
       msg: String,
       folderId: Number,
+      isPublic: Boolean,
+      folderTitle: String,
     },
+
     methods: {
       openFolder() {
-        this.$router.push({ name: 'folder', params: { id: this.folderId } })
-      }
+        localStorage.setItem('isPublic', this.isPublic);
+        this.$router.push({ name: 'folder', params: { id: this.folderId }})
+      },
+
     }
   };
   </script>

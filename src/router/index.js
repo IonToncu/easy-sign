@@ -51,15 +51,18 @@ const routes = [
     component: LoginView,
   },
   {
-    path: '/registration',
-    name: 'registration',
+    path: '/register',
+    name: 'register',
     component: RegistrationView
   },
   { 
     path: '/folder/:id',
     name: 'folder',
     component: FolderView,
-    props: true 
+    props: route => ({
+      id: route.params.id,
+      isPublic: route.query.isPublic || false
+    }),
   }
 ]
 

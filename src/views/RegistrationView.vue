@@ -1,14 +1,11 @@
 <template>
-    <section class="h-100 bg-dark">
-  <div class="container py-5 h-100">
-    <div class="row d-flex justify-content-center align-items-center h-100">
+    <section class="h-50 bg-dark">
+  <div class="container py-3 h-50">
+    <div class="row d-flex justify-content-center align-items-center h-50">
       <div class="col">
-        <div class="card card-registration my-4">
-          <div class="row g-0">
-            <div class="col-xl-6 d-none d-xl-block">
-              <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/img4.webp"
-                alt="Sample photo" class="img-fluid"
-                style="border-top-left-radius: .25rem; border-bottom-left-radius: .25rem;" />
+        <div class="card card-registration my-2">
+          <div class="row g-2">
+            <div class="col-xl-3 d-none d-xl-block">
             </div>
             <div class="col-xl-6">
               <div class="card-body p-md-5 text-black">
@@ -49,21 +46,27 @@
                   <label class="form-label" for="email">Email address</label>
                 </div>
 
-                <div class="row">
-                  <div class="col-md-6 mb-4">
-                    <div>
-                    <label for="user-type">User Type:</label>
-                      <select id="user-type" v-model="userType" @change="toggleFileUpload">
-                        <option value="client">Client</option>
-                        <option value="notary">Notary</option>
-                      </select>
-                    </div>`
-                  </div>
-                </div>
-
-
                 <div>
-                  <input type="file" @change="handleFileUpload">
+                  <v-col>
+                    <v-btn-toggle v-model="userType" color="black" mandatory>
+                      <v-btn value="Notar">
+                        <v-text>Notar</v-text>
+                      </v-btn>
+                      <v-btn value="Customer">
+                        <v-text>Customer</v-text>
+                      </v-btn>
+                    </v-btn-toggle>
+                  </v-col>
+               
+                  <v-col>
+                    <v-file-input
+                      multiple
+                      label="File input"
+                      @change="handleFileUpload"
+                      accept="application/pdf"
+                      v-show="this.userType === 'Notar'"
+                    ></v-file-input>
+                  </v-col>
                 </div>
 
                 <div class="d-flex justify-content-end pt-3">
@@ -94,13 +97,13 @@ export default {
       confirmPassword: '',
       email: '',
       password: '',
-      userType: '',
+      userType: 'Customer',
       file: null,
     }
   },
   methods: {
     registration() {
-      if (this.userType === 'notary'){
+      if (this.userType === 'notar'){
         this.uploadFile()
       }else{
         console.log(this.firstName)
@@ -111,13 +114,6 @@ export default {
         password: this.password });
       }
       
-    },
-    toggleFileUpload() {
-      if (this.userType !== 'notary') {
-        this.showFileUpload = true
-      } else {
-        this.showFileUpload = false
-      }
     },
     handleFileUpload(event) {
       this.file = event.target.files[0]

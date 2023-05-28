@@ -7,7 +7,8 @@
           <ul>
               <li><router-link to="/home">Home</router-link></li>
               <li><router-link to="/profile">profile</router-link></li>
-              <li><button @click="logout">Logout</button></li>
+              <li><router-link @click="logout" to="/login" v-show="show">Logout</router-link></li>
+              <li><router-link to="/login" v-show="!show">Login</router-link></li>
           </ul>
          
         </nav>
@@ -21,6 +22,14 @@
         type: String,
         default: "EasySign",
       },
+    },
+    data() {
+      return {
+        show: false,
+      };
+    },
+    mounted() {
+      this.show = localStorage.getItem("isAuthenticated") && true;
     },
     methods: {
       logout() {

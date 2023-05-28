@@ -7,6 +7,7 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
+    "@mdi/font": "^7.2.96",
     "@popperjs/core": "^2.11.7",
     "@syncfusion/ej2-vue-pdfviewer": "^21.2.5",
     "@vue/compat": "^3.3.2",
@@ -15,6 +16,7 @@
     "bootstrap-vue": "^2.23.1",
     "core-js": "^3.8.3",
     "jwt-decode": "^3.1.2",
+    "mdb-vue-ui-kit": "^4.0.0",
     "pdfjs-dist": "^3.6.172",
     "pdfvuer": "^2.0.1",
     "pspdfkit": "^2023.3.0",

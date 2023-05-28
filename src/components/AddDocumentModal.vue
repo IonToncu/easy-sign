@@ -2,7 +2,10 @@
     <v-row justify="center">
       <v-dialog v-model="dialog" persistent width="1024">
         <template v-slot:activator="{ props }">
-          <v-btn v-bind="props">Add document</v-btn>
+          <v-btn v-bind="props">
+            Add document
+            <v-icon icon="mdi-plus" ></v-icon>
+          </v-btn>
         </template>
         <v-card>
           <v-card-title>
