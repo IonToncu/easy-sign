@@ -103,10 +103,11 @@ export default {
   },
   methods: {
     registration() {
-      if (this.userType === 'notar'){
+      console.log("test")  
+      console.log(this.userType)  
+      if (this.userType === 'Notar'){
         this.uploadFile()
       }else{
-        console.log(this.firstName)
         this.$store.dispatch('registrationCustomer', { 
         name: this.firstName,
         lastName: this.lastName,

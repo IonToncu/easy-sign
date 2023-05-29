@@ -7,8 +7,8 @@
           <ul>
               <li><router-link to="/home">Home</router-link></li>
               <li><router-link to="/profile">profile</router-link></li>
-              <li><router-link @click="logout" to="/login" v-show="show">Logout</router-link></li>
-              <li><router-link to="/login" v-show="!show">Login</router-link></li>
+              <li><router-link @click="logout" to="/login" v-show="isAuthenticated">Logout</router-link></li>
+              <li><router-link to="/login" v-show="show && !isAuthenticated">Login</router-link></li>
           </ul>
          
         </nav>
@@ -26,15 +26,30 @@
     data() {
       return {
         show: false,
+        isAuthenticated: false,
       };
     },
+    watch: {
+      $route(to) {
+        this.updateHeader(to);
+      },
+    },
     mounted() {
-      this.show = localStorage.getItem("isAuthenticated") && true;
+      this.isAuthenticated = localStorage.getItem("isAuthenticated") == "true";
+      const url = window.location.href
+      this.show = url.includes("login") ? false : true;
     },
     methods: {
       logout() {
         localStorage.clear();
         this.$router.push('/login');
+      },
+      updateHeader(){
+        this.isAuthenticated = localStorage.getItem("isAuthenticated") == "true";
+        const url = window.location.href
+
+        if(url.includes("login")) this.show = false
+        if(url.includes("register")) this.show = true
       }
   }
     

@@ -8,7 +8,7 @@
   <v-card
     class="mx-auto"
     max-width="344"
-    title=folderTitle
+    :title=folderTitle
   >
    
 
@@ -17,7 +17,6 @@
     </v-card-title>
 
     <v-card-subtitle>
-      1,000 miles of wonder
     </v-card-subtitle>
 
     <v-card-actions>

@@ -41,6 +41,12 @@
           <v-row >
             <v-col cols="4" style="margin-top: 0.5rem;">
               <AddDocumentModal :folder-id="itemId" v-show="!isNotary"></AddDocumentModal>
+              <v-btn @click="getToPersonal"
+                v-show="isNotary && isPublic"
+                style="bottom: 1rem" color="black" :height="40"
+                >
+                <v-text>Get to sign</v-text>
+              </v-btn>
             </v-col>
             <v-col cols="8" >
               <v-card-text >
@@ -75,7 +81,7 @@
               <v-row>
                 <v-col v-for="(document, index) in documentList" :key="index" cols="6" md="3" >
                   <v-item v-slot="{ isSelected, selectedClass, toggle }">
-                    <DocumentCard :document-name="document.fileName" :document-id="document.id"></DocumentCard>
+                    <DocumentCard :document-name="document.fileName" :document-id="document.id" :status="document.fileStatus"></DocumentCard>
                   </v-item>
                 </v-col>
               </v-row>
@@ -90,52 +96,54 @@
           height="48rem"
         >
           <br/>
-          <v-row justify="center">
+          <v-row justify="center" v-show="!isPosted">
             <v-btn @click="toggleShowAndPostFolder" v-show="!isNotary" size="x-large"
             color="black"
             >
               <v-text>Post folder</v-text>
               <v-icon icon="mdi-cloud-upload" style="margin-left: 10px;"></v-icon>
-              </v-btn>
+            </v-btn>
           </v-row>
+
+          <v-row justify="center" v-show="!isShared && isPosted">
+            <v-btn @click="shareFolder" v-show="!isNotary" size="x-large"
+            color="black"
+            >
+              <v-text>Share folder</v-text>
+              <v-icon icon="mdi-cloud-upload" style="margin-left: 10px;"></v-icon>
+            </v-btn>
+          </v-row>
+          <v-row justify="center" v-show="isShared">
+            <v-btn @click="copyToClipboard" v-show="!isNotary" size="x-large"
+            color="black"
+            >
+              <v-text>Copy link to folder</v-text>
+              <v-icon icon="mdi-cloud-upload" style="margin-left: 10px;"></v-icon>
+            </v-btn>
+          </v-row>
+
 
           <br/><br/>
 
-          <v-row>
-            <v-list>
-              <v-list-subheader>Plain Variant</v-list-subheader>
-
-              <v-list-item
-                v-for="(item, i) in items"
-                :key="i"
-                :value="item"
-                  variant="elevated"
-              >
-                <template v-slot:prepend>
-                  <v-icon > mdi-check-circle</v-icon>
-                </template>
-
-                <v-list-item-title v-text="item.text"></v-list-item-title>
-              </v-list-item>
-            </v-list>
 
             <v-list>
-              <v-list-subheader>Tonal Variant</v-list-subheader>
+              <v-list-subheader>Last modification</v-list-subheader>
 
               <v-list-item
-                v-for="(item, i) in items"
+                v-for="(item, i) in documentList"
                 :key="i"
                 :value="item"
                 variant="elevated"
               >
                 <template v-slot:prepend>
-                  <v-icon>mdi-folder</v-icon>
+                  <v-icon>mdi-file</v-icon>
                 </template>
 
-                <v-list-item-title v-text="item.text"></v-list-item-title>
+                <v-list-item-title v-text="item.fileName"></v-list-item-title>
+                <v-list-item-subtitle v-text=formatDateTime(item.updated)></v-list-item-subtitle>
               </v-list-item>
             </v-list>
-          </v-row>
+
         </v-card>
       </v-col>
   </v-row>
@@ -146,6 +154,7 @@
 import axios from 'axios';
 import DocumentCard from '@/components/DocumentCard.vue';
 import AddDocumentModal from '@/components/AddDocumentModal.vue';
+import ClipboardJS from 'clipboard';
 import roles from "../store/module/Roles";
 
 export default {
@@ -153,9 +162,6 @@ export default {
     DocumentCard,
     AddDocumentModal
   },
-  props: {
-      isPublic: Boolean,
-    },
   data() {
     return {
       itemId: null,
@@ -166,6 +172,9 @@ export default {
       receivedParameter: null,
       isPublic: false,
       query: '',
+      isPosted: false,
+      isShared: false,
+      folderLink: "",
     };
   },
   created() {
@@ -173,8 +182,8 @@ export default {
   },
   mounted() {    
     this.itemId = this.$route.params.id;
-    this.isPublic = localStorage.getItem("isPublic");
-    localStorage.removeItem("isPublic"); 
+    this.isPublic = localStorage.getItem("isPublic") === "true";
+    this.isShared = localStorage.getItem("isShared") === "true";
 
     if(localStorage.getItem("role") != roles.NOTAR){
       this.fetchCustomerFolderData();
@@ -185,6 +194,21 @@ export default {
     };
   },
   methods: {
+    copyToClipboard(){
+      const textField = document.createElement('textarea');
+      textField.innerText = `http://localhost:8080/shared/${this.itemId}`
+      document.body.appendChild(textField);
+      textField.select();
+      document.execCommand('copy');
+      textField.remove();
+
+      // Show success message or perform other actions
+      console.log('Text copied to clipboard:', this.textToCopy);
+    },
+    formatDateTime(timestamp) {
+      console.log(timestamp);
+      return new Date(timestamp).toLocaleString();
+    },
     fetchCustomerFolderData() {
       this.getFolderRequest(`http://localhost:8075/api/v1/customer/folder/${this.itemId}`)
     },
@@ -206,8 +230,10 @@ export default {
         .catch(error => {
           console.log(error);
         });
+        window.location.reload();
     },
     fetchNotaryFolderData(){
+
       this.getFolderRequest(`http://localhost:8075/api/v1/admins/notary/folder/${this.itemId}`)
     },
     getToPersonal(){
@@ -226,6 +252,10 @@ export default {
         });
       window.location.reload();
     },
+    shareFolder(){
+      this.getFolderRequest(`http://localhost:8075/api/v1/customer/share_folder/${this.itemId}`)
+      
+    },
     getFolderRequest(URL){
       axios
         .get(URL, {
@@ -235,8 +265,11 @@ export default {
           },
         })
         .then(response => {
+          console.log(response.data.folder);
           this.folderName = response.data.folder.fileName;
           this.documentList = response.data.folder.documentDtoList;
+          this.isPosted = response.data.isPosted;
+          this.isShared = response.data.isShared;
         })
         .catch(error => {
           console.log(error);

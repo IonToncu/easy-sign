@@ -102,6 +102,7 @@
                 this.$router.push('/login');
                 }
             });
+            window.location.reload();
         }
     }
   };

@@ -6,6 +6,7 @@ import UserProfileView from '../views/UserProfileView.vue'
 import FolderView from '../views/FolderView.vue'
 import AdminHomeView from '../views/AdminHomeView.vue'
 import NotaryHomeViewVue from '@/views/NotaryHomeView.vue'
+import SharedFolderViewVue from '@/views/SharedFolderView.vue'
 
 const routes = [
   {
@@ -15,6 +16,11 @@ const routes = [
     meta: {
       requiresAuth: true // This route requires authentication
     }
+  },
+  {
+    path: '/shared/:id',
+    name: 'shared',
+    component: SharedFolderViewVue,
   },
   {
     path: '/admin',
@@ -78,9 +84,9 @@ router.beforeEach((to, from, next) => {
     next('/home');
   } else if (to.matched.some(route => route.meta.requiresAuth) && !isAuthenticated) {
     next('/login');
-  // } else if (to.matched.some(route => route.meta.requiresAdmin) && !isAdmin) {
-  //   console.log("not admin")
-  //   next('/login');
+  } else if (to.matched.some(route => route.meta.requiresAdmin) && !isAdmin) {
+    console.log("not admin")
+    next('/login');
   }else {
     next();
   }

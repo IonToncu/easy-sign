@@ -62,7 +62,7 @@
               <v-row>
                   <v-col v-for="(folder, index) in filteredList" :key="index"  cols="6" md="3" @click="redirectToFolderPage(folder.id)">
                   <v-item v-slot="{ isSelected, selectedClass, toggle }">
-                      <FolderCard :folder-id="folder.id" :folder-name="folder.fileName"></FolderCard>
+                      <FolderCard :folder-id="folder.id" :folder-title="folder.fileName"></FolderCard>
                   </v-item>
                   </v-col>
               </v-row>
@@ -78,27 +78,10 @@
           height="51rem"
         >
           <v-list>
-            <v-list-subheader>Plain Variant</v-list-subheader>
+            <v-list-subheader>Last update</v-list-subheader>
 
             <v-list-item
-              v-for="(item, i) in items"
-              :key="i"
-              :value="item"
-               variant="elevated"
-            >
-              <template v-slot:prepend>
-                <v-icon > mdi-check-circle</v-icon>
-              </template>
-
-              <v-list-item-title v-text="item.text"></v-list-item-title>
-            </v-list-item>
-          </v-list>
-
-          <v-list>
-            <v-list-subheader>Tonal Variant</v-list-subheader>
-
-            <v-list-item
-              v-for="(item, i) in items"
+              v-for="(item, i) in folders"
               :key="i"
               :value="item"
               variant="elevated"
@@ -107,7 +90,8 @@
                 <v-icon>mdi-folder</v-icon>
               </template>
 
-              <v-list-item-title v-text="item.text"></v-list-item-title>
+              <v-list-item-title v-text="item.fileName"></v-list-item-title>
+              <v-list-item-subtitle v-text=formatDateTime(item.updated)></v-list-item-subtitle>
             </v-list-item>
           </v-list>
         </v-card>
@@ -133,12 +117,9 @@ export default {
       query: '',
       items: [
         { text: 'My Files', icon: 'mdi-folder' },
-        { text: 'Shared with me', icon: 'mdi-account-multiple' },
+        { text: 'Shared', icon: 'mdi-account-multiple' },
         { text: 'Starred', icon: 'mdi-star' },
         { text: 'Recent', icon: 'mdi-history' },
-        { text: 'Offline', icon: 'mdi-check-circle' },
-        { text: 'Uploads', icon: 'mdi-upload' },
-        { text: 'Backups', icon: 'mdi-cloud-upload' },
       ],
       activity: [
         { type: 'subheader', title: 'Group #1' },
@@ -175,6 +156,10 @@ export default {
     this.loadCustomerFolders();
   },
   methods: {
+    formatDateTime(timestamp) {
+      console.log(timestamp);
+      return new Date(timestamp).toLocaleString();
+    },
     loadCustomerFolders() {
       axios
         .get('http://localhost:8075/api/v1/customer/folders', {
