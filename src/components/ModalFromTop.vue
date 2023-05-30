@@ -6,7 +6,7 @@
       width="1024"
     >
       <template v-slot:activator="{ props }">
-        <v-btn style="margin-top: 10%; align-items: center;"
+        <v-btn style="margin-top: 10%;"
           v-bind="props"
         >
           Add Folder
@@ -125,7 +125,7 @@ const axios = require('axios');
               this.$router.push('/login');
             }
           });
-
+          window.location.reload();
           
         },
     },

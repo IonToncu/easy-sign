@@ -18,7 +18,7 @@
       </v-card-subtitle>
   
       <v-card-actions>
-        <DocumentModalCard :document-id=documentId :document-name=documentName></DocumentModalCard>
+        <DocumentModalCard :document-id=documentId :document-name=documentName :folder-id=folderId></DocumentModalCard>
         <v-spacer></v-spacer>
         <v-icon color="yellow" size="x-large" v-show="isPENDING()" >mdi-clock-outline</v-icon>
         <v-icon color="green" size="x-large" v-show="isCHECKED()">mdi-check-circle-outline</v-icon>
@@ -57,6 +57,7 @@ export default {
   props: {
     documentName: String,
     documentId: Number,
+    folderId: Number,
     status: String
   },
   methods: {

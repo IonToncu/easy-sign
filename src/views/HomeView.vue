@@ -173,10 +173,10 @@ export default {
           this.folders = response.data.folders;
         })
         .catch(error => {
-          // if (error.response.status == 500) {
-          //   localStorage.clear();
-          //   this.$router.push('/login');
-          // }
+          if (error.response.status == 500) {
+            localStorage.clear();
+            this.$router.push('/login');
+          }
           console.log(error);
         });
     },

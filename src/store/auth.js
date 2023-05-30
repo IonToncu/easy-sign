@@ -27,7 +27,7 @@ class Authentication {
     localStorage.setItem('firstName', firstName)  
     localStorage.setItem('lastName', lastName)
     localStorage.setItem('email', email)
-    if(username === "ADMIN") localStorage.setItem('role', roles.ADMIN)
+    if(firstName === "ADMIN") localStorage.setItem('role', roles.ADMIN)
     else localStorage.setItem('role', role)
     localStorage.setItem('isAuthenticated', true)
   }

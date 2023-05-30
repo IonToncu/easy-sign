@@ -228,6 +228,10 @@ export default {
           console.log(response.data);
         })
         .catch(error => {
+          if (error.response.status == 500) {
+            localStorage.clear();
+            this.$router.push('/login');
+          }
           console.log(error);
         });
         window.location.reload();
@@ -248,9 +252,13 @@ export default {
           console.log(response.data);
         })
         .catch(error => {
+          if (error.response.status == 500) {
+            localStorage.clear();
+            this.$router.push('/login');
+          }
           console.log(error);
         });
-      window.location.reload();
+        this.$router.push('/notary');
     },
     shareFolder(){
       this.getFolderRequest(`http://localhost:8075/api/v1/customer/share_folder/${this.itemId}`)
@@ -272,6 +280,10 @@ export default {
           this.isShared = response.data.isShared;
         })
         .catch(error => {
+          if (error.response.status == 500) {
+            localStorage.clear();
+            this.$router.push('/login');
+          }
           console.log(error);
         });
     }

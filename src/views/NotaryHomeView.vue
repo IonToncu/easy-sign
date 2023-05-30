@@ -136,11 +136,33 @@
         </v-card>
       </v-col>
   </v-row>
+
+      <v-dialog
+          v-model="dialog"
+          width="auto"
+        >
+      <v-card>
+        <v-card-text>
+          Please set a password for creating the digital signature, which will be used when signing a document.
+        </v-card-text>
+        <v-text-field
+                  label="Password*"
+                  type="password"
+                  v-model="password"
+                  required
+                ></v-text-field>
+        <v-card-actions>
+          <v-btn color="primary" block @click="createCertificate" :disabled="isLongEnough">Create certificate</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
   </template>
   
   <script>
 import axios from 'axios';
 import FolderCard from '@/components/FolderCard.vue';
+import { BIconWindowSidebar } from 'bootstrap-vue';
 
 
 export default {
@@ -153,17 +175,48 @@ export default {
             personalFolders: [],
             toggle: "Personal",
             isPersonal: true,
+            hasCertificate: false,
+            dialog: false,
+            password: '',
         }
     },
     mounted() {
-      this.loadFolders(); // Call the method to load data when the component is mounted
+      this.loadFolders(); 
+      this.checkCertificate();
     },
     watch: {
       toggle: function() {
         this.isPersonal = !this.isPublic();
-      }
+      },
+
+    },
+    computed:{
+      isLongEnough() {
+        return this.password.length < 5;
+      },
     },
     methods: {
+      createCertificate(password) {
+        try {
+          const response = axios.get('http://localhost:8075/api/v1/admins/notary/create_certificate', {
+            headers: {
+              Authorization: 'bearer_' + localStorage.getItem('token'),
+              'Content-Type': 'multipart/form-data',
+            },
+            params: {
+              password: this.password
+            }
+          }).then(response => {
+            console.log(response.data);
+            this.dialog = false;
+          })
+          
+          window.location.reload();
+        } catch (error) {
+          console.error(error);
+          // Handle the error
+        }
+      },
         loadFolders() { 
         axios.get('http://localhost:8075/api/v1/admins/notary/allFolders', {
             headers: {
@@ -177,14 +230,39 @@ export default {
             this.personalFolders = response.data.personalFolder;
           })
           .catch(error => {
+            if (error.response.status == 500) {
+            localStorage.clear();
+            this.$router.push('/login');
+          }
             console.log(error);
           })
       },
       isPublic() {  
         return this.toggle === "Public";
-        },
+      },
+      checkCertificate(){
+        
+        axios.get('http://localhost:8075/api/v1/admins/notary/check_certificate', {
+          headers: {
+            Authorization: 'bearer_' + localStorage.getItem('token'),
+            'Content-Type': 'multipart/form-data',
+          }
+        })
+        .then(response => {
+          this.hasCertificate = response.data.hasCertificate;
+          this.dialog = !this.hasCertificate;
+        })
+        .catch(error => {
+        //   if (error.response.status == 500) {
+        //   localStorage.clear();
+        //   this.$router.push('/login');
+        // }
+        //   console.log(error);
+        })
+      }
 
     },
+    
   };
   </script>
   

@@ -11,9 +11,9 @@
         <iframe ref="pdfViewer" title="PDF" height="100%" :src="fetchPdfData"></iframe>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="green darken-1" variant="text" @click="acceptDocument()" v-show="isNotary">Approve</v-btn>
-          <v-btn color="green darken-1" variant="text" @click="declineDocument()" v-show="isNotary">Decline</v-btn>
-          <v-btn color="green darken-1" variant="text" @click="dialog = false" v-show="!isNotary">Close</v-btn>
+          <v-btn color="green darken-1" variant="text" @click="acceptDocument()" v-show="isNotary && !isPublic">Approve</v-btn>
+          <v-btn color="green darken-1" variant="text" @click="declineDocument()" v-show="isNotary && !isPublic">Decline</v-btn>
+          <v-btn color="green darken-1" variant="text" @click="dialog = false" v-show="!isNotary || isPublic">Close</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -29,47 +29,59 @@ export default {
     return {
       dialog: false,
       fetchPdfData: null,
-      isNotary: false
+      isNotary: false,
+      isPrivate: false
     };
   },
   props: {
     documentName: String,
     documentId: Number,
-    folderId: Number
+    folderId: Number, 
+    isPublic: {
+      type: Boolean,
+      default: true
+    }
   },
   mounted() {
-    var FileUrl =  `http://localhost:8075/api/v1/utility/doc/${this.documentId}`;
-    
-    if(localStorage.getItem("isAuthenticated") === "true"){
+    var FileUrl =  '';
+    const url = window.location.href
+    if(url.includes("shared")){
+      FileUrl =  `http://localhost:8075/api/v1/utility/doc`;
+      this.fetchSharedPdf(FileUrl, this.documentId, this.folderId);
+    }else if(localStorage.getItem("isAuthenticated") === "true"){
       if(localStorage.getItem("role") === roles.NOTAR){ 
       FileUrl = `http://localhost:8075/api/v1/admins/notary/doc/${this.documentId}`;
       this.isNotary = true }
       else FileUrl = `http://localhost:8075/api/v1/customer/doc/${this.documentId}`
+      this.fetchPdf(FileUrl);
     }
-     
-    this.fetchPdf(FileUrl);
+
   },
   methods: {
-    /**
-     * 
-     * @param {axios.post('http://localhost:8075/api/v1/reg/registration', {
-            username: name + " " + lastName,
-            firstName: name,
-            lastName: lastName,
-            email: email,
-            password: password
-          }} FileUrl 
-     */
+
     fetchPdf(FileUrl) {
       axios
         .get(FileUrl, {
-          folderId: this.folderId
-          }, {
           headers: {
             Authorization: 'bearer_' + localStorage.getItem('token'),
             'Content-Type': 'multipart/form-data',
           },
-          responseType: 'blob' // Set the response type to 'blob' to handle binary data
+          responseType: 'blob'
+        })
+        .then(response => {
+          this.fetchPdfData = URL.createObjectURL(response.data);
+        })
+        .catch(error => {
+          // Handle the error
+        });
+    },
+    fetchSharedPdf(FileUrl, docId, folderId) {
+      axios.get(FileUrl, {
+          params: {
+            "folderId": folderId,
+            "docId": docId
+          },
+          responseType: 'blob' // Set the response type to 'arraybuffer' to handle binary data
         })
         .then(response => {
           this.fetchPdfData = URL.createObjectURL(response.data);
