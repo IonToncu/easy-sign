@@ -79,7 +79,8 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const isAuthenticated = localStorage.getItem('isAuthenticated')
-  const isAdmin = (localStorage.getItem('role') === 'ADMIN' )
+  const isAdmin = (localStorage.getItem('role') === 'admin' )
+  console.log(localStorage.getItem('role'))
   if (to.path === '/login' && isAuthenticated) {
     next('/home');
   } else if (to.matched.some(route => route.meta.requiresAuth) && !isAuthenticated) {

@@ -78,13 +78,13 @@
 
                 <v-col v-for="(publicFolder, index) in publicFolders" :key="index" cols="6" md="3" v-show="!isPersonal">
                 <v-item v-slot="{ isSelected, selectedClass, toggle }">
-                    <FolderCard :folder-id="publicFolder.id" :is-public = true ></FolderCard>
+                    <FolderCard :folder-id="publicFolder.id" :is-public="true" ></FolderCard>
                 </v-item>
                 </v-col>
 
                 <v-col v-for="(personalFolder, index) in personalFolders" :key="index" cols="6" md="3" v-show="isPersonal">
                 <v-item v-slot="{ isSelected, selectedClass, toggle }">
-                    <FolderCard :folder-id="personalFolder.id" :is-public = false></FolderCard>
+                    <FolderCard :folder-id="personalFolder.id" :is-public="false"></FolderCard>
                 </v-item>
                 </v-col>
 
@@ -207,7 +207,6 @@ export default {
               password: this.password
             }
           }).then(response => {
-            console.log(response.data);
             this.dialog = false;
           })
           
@@ -225,7 +224,6 @@ export default {
             }
           })
           .then(response => {
-            console.log(response.data);
             this.publicFolders = response.data.publicFolder;
             this.personalFolders = response.data.personalFolder;
           })

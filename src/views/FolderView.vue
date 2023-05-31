@@ -81,7 +81,10 @@
               <v-row>
                 <v-col v-for="(document, index) in documentList" :key="index" cols="6" md="3" >
                   <v-item v-slot="{ isSelected, selectedClass, toggle }">
-                    <DocumentCard :document-name="document.fileName" :document-id="document.id" :status="document.fileStatus"></DocumentCard>
+                    <DocumentCard :document-name="document.fileName"
+                      :document-id="document.id"
+                      :status="document.fileStatus"
+                      :is-public="isPublic"></DocumentCard>
                   </v-item>
                 </v-col>
               </v-row>
@@ -201,12 +204,8 @@ export default {
       textField.select();
       document.execCommand('copy');
       textField.remove();
-
-      // Show success message or perform other actions
-      console.log('Text copied to clipboard:', this.textToCopy);
     },
     formatDateTime(timestamp) {
-      console.log(timestamp);
       return new Date(timestamp).toLocaleString();
     },
     fetchCustomerFolderData() {
@@ -225,7 +224,6 @@ export default {
           },
         })
         .then(response => {
-          console.log(response.data);
         })
         .catch(error => {
           if (error.response.status == 500) {
@@ -249,7 +247,6 @@ export default {
           },
         })
         .then(response => {
-          console.log(response.data);
         })
         .catch(error => {
           if (error.response.status == 500) {
@@ -258,7 +255,7 @@ export default {
           }
           console.log(error);
         });
-        this.$router.push('/notary');
+        this.$router.push('/notary ');
     },
     shareFolder(){
       this.getFolderRequest(`http://localhost:8075/api/v1/customer/share_folder/${this.itemId}`)
@@ -273,7 +270,6 @@ export default {
           },
         })
         .then(response => {
-          console.log(response.data.folder);
           this.folderName = response.data.folder.fileName;
           this.documentList = response.data.folder.documentDtoList;
           this.isPosted = response.data.isPosted;

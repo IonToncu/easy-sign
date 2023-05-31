@@ -18,6 +18,26 @@
       </v-card>
     </v-dialog>
   </v-row>
+
+  <v-dialog
+          v-model="dialogPassword"
+          width="auto"
+        >
+      <v-card>
+        <v-card-text>
+          Please enter the password for the private key
+        </v-card-text>
+        <v-text-field
+                  label="Password*"
+                  type="password"
+                  v-model="password"
+                  required
+                ></v-text-field>
+        <v-card-actions>
+          <v-btn color="primary" block @click="checkPassword" :disabled="isLongEnough">Sign</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 </template>
 
 <script>
@@ -30,20 +50,27 @@ export default {
       dialog: false,
       fetchPdfData: null,
       isNotary: false,
-      isPrivate: false
+      isPrivate: false,
+      isPublic: false,
+      dialogPassword: false,
+      password: '',
     };
   },
   props: {
     documentName: String,
     documentId: Number,
     folderId: Number, 
-    isPublic: {
-      type: Boolean,
-      default: true
-    }
+
+  },
+  computed:{
+    isLongEnough() {
+      return this.password.length < 5;
+    },
   },
   mounted() {
     var FileUrl =  '';
+    this.isPublic = localStorage.getItem("isPublic") === "true";
+
     const url = window.location.href
     if(url.includes("shared")){
       FileUrl =  `http://localhost:8075/api/v1/utility/doc`;
@@ -58,7 +85,29 @@ export default {
 
   },
   methods: {
+    checkPassword(){
+      this.dialogPassword = false;
 
+      const config = {
+        headers: {
+          Authorization: 'bearer_' + localStorage.getItem('token'),
+            'Content-Type': 'multipart/form-data',
+        },
+        params: {
+          docId: this.documentId,
+          password: this.password
+        }
+      };
+
+      axios.get('http://localhost:8075/api/v1/admins/notary/approve/doc/', config)
+        .then(response => {
+          console.log(response.data);
+        })
+        .catch(error => {
+          console.error(error);
+        });
+      window.location.reload();
+    },
     fetchPdf(FileUrl) {
       axios
         .get(FileUrl, {
@@ -91,8 +140,9 @@ export default {
         });
     },
     acceptDocument(){
-      console.log(this.documentId);
-      this.getFolderRequest(`http://localhost:8075/api/v1/admins/notary/approve/doc/${this.documentId}`)
+      this.dialogPassword = true;
+      this.dialog = false;
+      // this.getFolderRequest(`http://localhost:8075/api/v1/admins/notary/approve/doc/${this.documentId}`)
     },
     declineDocument(){
       this.getFolderRequest(`http://localhost:8075/api/v1/admins/notary/decline/doc/${this.documentId}`)
@@ -106,7 +156,6 @@ export default {
           },
         })
         .then(response => {
-          console.log(response.data);
         })
         .catch(error => {
           console.log(error);

@@ -58,7 +58,11 @@ export default {
     documentName: String,
     documentId: Number,
     folderId: Number,
-    status: String
+    status: String,
+    isPublic: {
+      type: Boolean,
+      default: false
+    }
   },
   methods: {
     isCHECKED(){

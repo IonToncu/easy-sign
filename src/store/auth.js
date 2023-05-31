@@ -22,11 +22,11 @@ class Authentication {
     this.role = role;
 
     localStorage.setItem('token', token)
-    console.log(localStorage.setItem('token', token))
     localStorage.setItem('username', username)
     localStorage.setItem('firstName', firstName)  
     localStorage.setItem('lastName', lastName)
     localStorage.setItem('email', email)
+    console.log(firstName)
     if(firstName === "ADMIN") localStorage.setItem('role', roles.ADMIN)
     else localStorage.setItem('role', role)
     localStorage.setItem('isAuthenticated', true)
