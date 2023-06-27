@@ -1,14 +1,15 @@
 <template>
     <header class="header">
         <div class="header__logo">
-        <img src="../assets/logo.png" alt="EasySign logo" />
+        <!-- <img src="../assets/logo3.png" alt="EasySign logo" /> -->
+        <h1 color="white">𝙴𝚊𝚜𝚢𝚂𝚒𝚐𝚗</h1>
         </div>
         <nav class="header__nav">
           <ul>
-              <li><router-link to="/home">Home</router-link></li>
-              <li><router-link to="/profile">profile</router-link></li>
-              <li><router-link @click="logout" to="/login" v-show="isAuthenticated">Logout</router-link></li>
-              <li><router-link to="/login" v-show="show && !isAuthenticated">Login</router-link></li>
+              <li><router-link to="/home">𝙷𝚘𝚖𝚎</router-link></li>
+              <li><router-link to="/profile">𝙿𝚛𝚘𝚏𝚒𝚕𝚎</router-link></li>
+              <li><router-link @click="logout" to="/login" v-show="isAuthenticated">𝙻𝚘𝚐𝚘𝚞𝚝</router-link></li>
+              <li><router-link to="/login" v-show="show && !isAuthenticated">𝙻𝚘𝚐𝚒𝚗</router-link></li>
           </ul>
          
         </nav>
@@ -61,7 +62,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #121212;
+  background-color: #000000;
   padding: 1rem;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   height: 4rem;

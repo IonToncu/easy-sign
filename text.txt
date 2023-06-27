@@ -1,0 +1,128 @@
+ Rutare și gestionarea stării aplicației
+Pentru rutare și gestionarea stării aplicației în Vue.js, am utilizat următoarele biblioteci și concepte:
+
+Vue Router: Vue Router este o bibliotecă oficială Vue.js care gestionează rutarea în aplicație. Ne permite să definim rute și să asociem componente cu acestea. Putem utiliza Vue Router pentru a gestiona navigarea între pagini și pentru a afișa componentele corespunzătoare în funcție de ruta accesată. Iată un exemplu simplu de configurare a Vue Router
+import { createRouter, createWebHistory } from 'vue-router'
+import HomeView from '../views/HomeView.vue'
+...
+
+
+const routes = [
+  {
+    path: '/home',
+    name: 'home',
+    component: HomeView,
+    meta: {
+      requiresAuth: true // This route requires authentication
+    }
+  },
+  {
+    path: '/shared/:id',
+    name: 'shared',
+    component: SharedFolderViewVue,
+  }, ...
+ 
+
+
+const router = createRouter({
+  history: createWebHistory(process.env.BASE_URL),
+  routes
+})
+
+
+router.beforeEach((to, from, next) => {
+	...
+});
+
+
+export default router
+
+
+Vuex: Vuex este o bibliotecă oficială Vue.js pentru gestionarea stării aplicației. Ne permite să organizăm și să gestionăm starea centralizată a aplicației, astfel încât componente diferite să poată accesa și actualiza aceeași stare. Putem utiliza Vuex pentru a gestiona starea autentificării utilizatorului, informațiile despre foldere și alte date relevante. Iată un exemplu simplu de configurare a Vuex:
+
+import { createApp } from 'vue';
+import App from './App.vue';
+import router from './router';
+
+
+const vuetify = createVuetify({
+  components,
+  directives,
+})
+
+
+const app = createApp(App);
+app.use(vuex);
+app.use(router);
+app.use(vuetify)
+app.mount('#app');
+
+
+
+Gestionarea interacțiunii cu API-urile backend-ului:
+
+
+Fig 4.5
+
+Pentru a gestiona interacțiunea cu API-urile backend-ului în Vue.js, am utilizat Axios, o bibliotecă HTTP , care ne permite să facem cereri către server și să gestionăm răspunsurile.
+
+Configurarea Axios: Înainte de a utiliza Axios, avea nevoie de configurare pentru a specifica adresa de bază a API-ului și pentru a seta, opțional, anteturi comune sau intercepționarea cererilor. 
+
+Realizarea cererilor API: Pentru a efectua cereri către API-uri, putem utiliza metodele Axios precum get, post, put, delete, etc. Acestea returnează raspunsuri pe care le putem utiliza pentru a gestiona. 
+Utilizarea în componente: Putem importa funcțiile definite anterior în componente și să le utilizăm pentru a efectua cereri către API-uri
+
+Proiectarea backend-ului cu Spring Boot
+Structura proiectului Spring Boot:
+
+Descriere generală a fiecărei componente menționate:
+
+certificate: Această componentă conține clase și logica asociată cu certificatele digitale. Include generarea și gestionarea certificatelor digitale utilizate pentru semnarea digitală a fișierelor.
+config: Componenta config conține fișierele de configurare ale aplicației EasySign. Acestea includ configurări legate de baza de date, configurări ale API-urilor externe, configurări de securitate și altele.
+dto: DTO (Data Transfer Object) reprezintă obiecte utilizate pentru transferul datelor între diferite straturi ale aplicației. Această componentă conține clase care definesc structura datelor transferate între frontend și backend.
+Fig. 4.6
+
+
+
+
+model: Componenta model conține clasele care definesc modelele de date utilizate în aplicație. De exemplu, în EasySign, exista un model pentru fișiere și un model pentru utilizatori.
+
+file: Aceasta conține clasele care definesc proprietățile și comportamentul fișierelor. De exemplu, are o clasă File care conține informații precum nume, dimensiune și calea către fișier.
+user: Aceasta conține clasele care definesc utilizatorii aplicației EasySign. Acestea includ proprietăți precum nume, adresa de email, parola și alte informații relevante despre utilizatori.
+repository: Componenta repository conține interfețe și clase de implementare pentru accesul la baza de date sau alte surse de date. Aceasta include în mod specific repository-uri pentru manipularea datelor legate de fișiere și utilizatori.
+file_repository: Aceasta conține interfețe și clase de implementare pentru manipularea datelor despre fișiere în baza de date sau în altă sursă de date.
+user_repository: Aceasta conține interfețe și clase de implementare pentru manipularea datelor despre utilizatori în baza de date sau în altă sursă de date.
+rest: Componenta rest conține controlerele REST care expun API-uri pentru a gestiona diferitele operații și funcționalități ale aplicației EasySign. Aceste controlere pot manipula cereri HTTP și returna răspunsuri HTTP în format JSON sau alte formate.
+security: Componenta security se ocupă de aspectele de securitate ale aplicației EasySign. Aceasta includ configurarea autentificării, autorizării și alte aspecte legate de securitate.
+jwt: Aceasta conține clase și logica asociată cu generarea și validarea tokenurilor JWT (JSON Web Tokens) utilizate pentru autentificare și autorizare în aplicație.
+service: Componenta service conține clasele care conțin logica de afaceri a aplicației EasySign. Acestea includ operațiile de bază pentru gestionarea fișierelor, utilizatorilor și alte
+
+
+Integrarea cu baza de date MySQL
+Integrarea cu baza de date se realizeaza cu ajutorul fișierul db.changelog-1.0.xml pentru Liquibase pe care definește o serie de modificări de structură și de date pentru integrarea cu baza de date MySQL. Aceste modificări sunt aplicate folosind Liquibase și sunt descrise în format XML.
+În acest fișier XML, sunt definite mai multe secțiuni de modificări reprezentate de elementul <changeSet>. Fiecare <changeSet> reprezintă o modificare distinctă și are un identificator unic (id) și un autor (author). Aceste informații ajută la gestionarea și urmărirea modificărilor în baza de date.
+Pentru fiecare tabel nou, se utilizează elementul <createTable>. De exemplu, avem notary, customer, documents, folders, customer_personal_list_of_folders, notary_personal_list_of_folders, registration_notary, folders_documents, roles, notary_roles, customer_roles, roles_customers_list, roles_notary_list și public_stack_folder.
+Pentru fiecare tabel nou, se definesc coloanele utilizând elementul <column>. Atributele coloanei includ name (numele coloanei), type (tipul de date al coloanei) și alte atribute specifice, cum ar fi autoIncrement, nullable, primaryKey, etc.
+De asemenea, se pot defini constrângeri pentru coloane utilizând elementul <constraints>. De exemplu, avem chei primare (primaryKey), chei unice (addUniqueConstraint) și chei externe (addForeignKeyConstraint).
+Fiecare tabel poate avea mai multe modificări. De exemplu, se pot adăuga constrângeri suplimentare sau se pot modifica coloane existente. Toate aceste modificări sunt descrise în interiorul <changeSet> corespunzător.
+Aceste modificări de structură și de date sunt aplicate folosind Liquibase. Liquibase este o unealtă de gestionare a schemelor și a datelor în bazele de date. Prin intermediul fișierului de configurare Liquibase, poți crea, actualiza și sincroniza structura bazei de date cu codul. De exemplu, se utilizează aceste modificări pentru a crea tabelele și a defini coloanele și constrângerile asociate acestora în baza de date MySQL atunci când rulează aplicația.
+
+Fig. 4.7
+//
+Implementarea interfeței utilizator folosind Vue.js pentru o aplicație implică mai mulți pași:
+
+Configurarea mediului de dezvoltare: Înainte de a începe implementarea, trebuie să configurați mediul de dezvoltare pentru Vue.js. Acesta include instalarea Node.js și a Vue CLI (Command Line Interface) pentru a crea un proiect Vue.js.
+
+Crearea structurii proiectului: Folosind Vue CLI, puteți crea o structură inițială a proiectului Vue.js. Aceasta include directoarele pentru componente, pagini, rute, stare și servicii, precum și fișierele principale, cum ar fi App.vue și main.js.
+
+Definirea componentelor: În directorul components/, puteți defini componentele Vue necesare pentru interfața utilizator. Acestea includ componente reutilizabile, precum antetul (Header.vue), bara laterală (Sidebar.vue), lista de foldere (FolderList.vue), detalii despre un folder și lista de documente (Folder.vue), lista de documente dintr-un folder (DocumentList.vue), etc. Fiecare componentă Vue ar trebui să conțină un template HTML, stiluri CSS și cod JavaScript Vue.
+
+Configurarea rutelor: În directorul router/, puteți configura rutarea aplicației și navigarea între pagini utilizând Vue Router. Puteți defini rutele și componentele asociate acestora în fișierul index.js. De exemplu, puteți defini ruta /folders pentru a afișa componenta FolderList.vue, iar ruta /folder/:id pentru a afișa componenta DocumentList.vue pentru un folder specific identificat prin id.
+
+Comunicarea cu serverul: În directorul services/, puteți crea servicii pentru a gestiona comunicarea cu serverul prin intermediul cererilor HTTP către API-ul backend-ului. Puteți utiliza biblioteci precum Axios sau fetch API pentru a realiza cererile HTTP. Serviciile pot fi utilizate pentru a obține sau actualiza datele utilizatorilor, precum lista de foldere și documente.
+
+Gestionarea stării aplicației (opțional): Dacă aplicația necesită o gestionare mai avansată a stării, puteți utiliza Vuex. În directorul store/, puteți defini module Vuex care vor gestiona starea aplicației și logica asociată acesteia. Acest lucru poate include stocarea și actualizarea datelor, gestionarea evenimentelor și mutațiilor, și sincronizarea cu serverul.
+
+Implementarea interacțiunilor și logicii: Utilizând componentele, rutarea, serviciile și starea, puteți implementa interacțiuni complexe și logica specifică aplicației. Acest lucru poate include gestionarea evenimentelor utilizatorului, actualizarea stării, apeluri către servicii pentru a obține sau actualiza datele, și afișarea corespunzătoare a componentelor și paginilor.
+
+Stilizarea și aspectul vizual: Puteți utiliza CSS sau un preproces
+
